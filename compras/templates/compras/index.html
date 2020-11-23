@@ -1,0 +1,18 @@
+{% extends "compras/layout.html" %}
+
+
+{% block body %}
+<h4>Suas Listas:</h4>
+<ul>
+{% for lista in listas %}
+    <li><a href="{% url 'lista' lista.id %}">{{ lista.nome }}</a></li>
+{% empty %}
+    <p>Nenhuma lista ainda.</p>
+{% endfor %}
+</ul>
+
+<a href="{% url 'criar'%}">
+<button type="button" class="btn btn-primary">Criar nova lista</button>
+</a>
+
+{% endblock %}

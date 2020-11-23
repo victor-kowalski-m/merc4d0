@@ -1,0 +1,31 @@
+{% extends "compras/layout.html" %}
+
+
+{% block body %}
+
+    <h2>Registre-se</h2>
+
+    <form action="{% url 'registrar' %}" method="post" autocomplete="off">
+        {% csrf_token %}
+        <div class="form-group">
+            <input class="form-control" autofocus type="text" name="username" placeholder="Usuário" required>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="email" name="email" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="text" name="cpf" placeholder="CPF (só números)" maxlength="11" required>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" name="password" placeholder="Senha" required>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" name="confirmation" placeholder="Confirmar senha" required>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Register">
+    </form>
+
+    Já tem uma conta? <a href="{% url 'login' %}">Faça o login.</a>
+
+
+{% endblock %}
