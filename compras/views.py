@@ -12,6 +12,16 @@ from .models import *
 
 # Create your views here.
 
+class NovaLista(ModelForm):
+    class Meta:
+        model = Lista
+        fields = ['nome']
+
+class AdicionarProduto(ModelForm):
+    class Meta:
+        model = ProdutoLista
+        fields = "__all__"
+
 @login_required(login_url='login')
 def index(request):
     return render(request, "compras/index.html", {
@@ -74,7 +84,31 @@ def registrar(request):
         return render(request, "compras/registrar.html")
 
 def produtos(request):
-    pass
+    if request.method == "GET":
+        return render(request, "compras/produtos.html", {
+            "produtos": Produto.objects.all(),
+            "listas": Lista.objects.filter(usuario=request.user)
+        })
+
+    else:
+        form = AdicionarProduto(request.POST)
+        
+        if form.is_valid():
+            
+            form.save()
+
+            messages.success(request, "Adicionado!")
+            return render(request, "compras/produtos.html", {
+            "produtos": Produto.objects.all(),
+            "listas": Lista.objects.filter(usuario=request.user)
+        })
+
+        else:
+            messages.error(request, "Inválido")
+            return render(request, "compras/produtos.html", {
+            "produtos": Produto.objects.all(),
+            "listas": Lista.objects.filter(usuario=request.user)
+        })
 
 def supermercados(request):
     pass
@@ -82,8 +116,16 @@ def supermercados(request):
 def pedidos(request):
     pass
 
-def lista(request, lista):
-    pass
+def lista(request, id):
+    if request.method == "GET":
+        produtos = (ProdutoLista.objects.filter(lista=id))
+        return render(request, 'compras/lista.html', {
+            "produtos": produtos,
+            "id": id
+        })
+
+    else:
+        return HttpResponseRedirect(reverse("produtos"))
 
 def carteira(request):
     pass
@@ -92,4 +134,25 @@ def conta(request):
     pass
 
 def criar(request):
-    pass
+    if request.method == "GET":
+        return render(request, "compras/criar.html")
+    
+    else:
+        form = NovaLista(request.POST)
+        
+        if form.is_valid():
+            data = form.cleaned_data
+
+            if data['nome'] in Lista.objects.values_list('nome', flat=True).filter(usuario=request.user):
+                messages.error(request, 'Lista já existe!')
+                return render(request, "compras/criar.html")
+
+            instance = form.save(commit=False)
+            instance.usuario = request.user
+            instance.save()
+            messages.success(request, 'Lista criada!')
+            return HttpResponseRedirect(reverse("index")) 
+
+        else:
+            messages.error(request, 'Dados inválidos.')
+            return render(request, "compras/criar.html")

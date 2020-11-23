@@ -1,5 +1,30 @@
 {% extends "compras/layout.html" %}
 
 {% block body %}
-    {{ form }}
+    <form action="{% url 'produtos' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+        <select name="produto" class="form-control" required>
+            <option selected="selected">Escolha o produto</option>
+            {% for produto in produtos %}
+            <option value="{{ produto.id }}">{{ produto.nome }}</option>
+            {% endfor %}
+        </select>
+        </div>
+        <div class="form-group">
+            <!--
+                E quando não tem lista?????
+            -->
+            <select name="lista" class="form-control" required place>
+                <option selected="selected">Escolha a lista</option>
+                {% for lista in listas %}
+                <option value="{{ lista.id }}">{{ lista.nome }}</option>
+                {% endfor %}
+            </select>
+            </div>
+        <div class="form-group">
+            <input type="number" required class="form-control" min="1" name="quantidade" placeholder="Quantidade">
+        </div>
+        <input class="btn btn-primary" type="submit" value="Adicionar">
+    </form>
 {% endblock %}
