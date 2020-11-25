@@ -1,6 +1,7 @@
 {% extends "compras/layout.html" %}
 
 {% block body %}
+    <h4>{{nome}}</h4>
     <ul>
     {% for produto in produtos %}
         <li>{{ produto.produto.nome }} | Quantidade: {{ produto.quantidade }}</li>

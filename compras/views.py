@@ -127,9 +127,11 @@ def pedidos(request):
 def lista(request, id):
     if request.method == "GET":
         produtos = (ProdutoLista.objects.filter(lista=id))
+        nomelista = Lista.objects.get(pk=id).nome
         return render(request, 'compras/lista.html', {
             "produtos": produtos,
-            "id": id
+            "id": id,
+            "nome": nomelista
         })
 
     else:
