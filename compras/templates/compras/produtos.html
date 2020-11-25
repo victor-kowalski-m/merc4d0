@@ -18,7 +18,15 @@
             <select name="lista" class="form-control" required place>
                 <option selected="selected">Escolha a lista</option>
                 {% for lista in listas %}
-                <option value="{{ lista.id }}">{{ lista.nome }}</option>
+                    {% if l %}
+                        {% if lista.id|stringformat:"s" == l %}
+                            <option value="{{ lista.id }}" selected="selected">{{ lista.nome }}</option>
+                        {% else %}
+                            <option value="{{ lista.id }}">{{ lista.nome }}</option>
+                        {% endif %}
+                    {% else %}
+                        <option value="{{ lista.id }}">{{ lista.nome }}</option>
+                    {% endif %}
                 {% endfor %}
             </select>
             </div>

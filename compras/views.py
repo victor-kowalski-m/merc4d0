@@ -85,7 +85,15 @@ def registrar(request):
 
 def produtos(request):
     if request.method == "GET":
-        return render(request, "compras/produtos.html", {
+        params = request.GET
+        if 'lista' in params:
+            return render(request, "compras/produtos.html", {
+            "produtos": Produto.objects.all(),
+            "listas": Lista.objects.filter(usuario=request.user),
+            'l': params['lista']
+        })
+        else:
+            return render(request, "compras/produtos.html", {
             "produtos": Produto.objects.all(),
             "listas": Lista.objects.filter(usuario=request.user)
         })
@@ -125,7 +133,7 @@ def lista(request, id):
         })
 
     else:
-        return HttpResponseRedirect(reverse("produtos"))
+        return HttpResponseRedirect(f"/produtos?lista={id}")
 
 def carteira(request):
     pass
