@@ -104,9 +104,20 @@ def produtos(request):
         
         if form.is_valid():
             
-            form.save()
+            data = form.cleaned_data
 
-            messages.success(request, "Adicionado!")
+            if ProdutoLista.objects.filter(lista=data['lista'], produto=data['produto']).exists():
+                p = ProdutoLista.objects.get(
+                    produto=Produto.objects.get(pk=data['produto'].id),
+                    lista=Lista.objects.get(pk=data['lista'].id))
+                p.quantidade += int(data['quantidade'])
+                p.save() 
+                messages.success(request, "Aumentado!")
+
+            else:
+                form.save()
+                messages.success(request, "Adicionado!")
+            
             return render(request, "compras/produtos.html", {
             "produtos": Produto.objects.all(),
             "listas": Lista.objects.filter(usuario=request.user)
