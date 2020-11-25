@@ -4,13 +4,28 @@
     <h4>{{nome}}</h4>
     <ul>
     {% for produto in produtos %}
-        <li>{{ produto.produto.nome }} | Quantidade: {{ produto.quantidade }}</li>
+        <li>
+            <form action="{% url 'lista' id %}" method="post">
+                {% csrf_token %}
+                <span>{{ produto.produto.nome }} | Quantidade: {{ produto.quantidade }} </span>
+                <input type="hidden" name="item" value="{{ produto.id }}">
+                <input type="submit" class="btn btn-danger" value="X">
+            </form>
+        </li>
+        <br>
     {% empty %}
         <p>Lista vazia.</p>
     {% endfor %}
     </ul>
     <form action="{% url 'lista' id %}" method="post">
         {% csrf_token %}
+        <input type="hidden" name="lista" value="add">
         <input type="submit" class="btn btn-primary" value="Adicionar Produtos">
+    </form>
+    <br>
+    <form action="{% url 'lista' id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="lista" value="excluir">
+        <input type="submit" class="btn btn-danger" value="Excluir lista">
     </form>
 {% endblock %}

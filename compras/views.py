@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -135,7 +136,27 @@ def lista(request, id):
         })
 
     else:
-        return HttpResponseRedirect(f"/produtos?lista={id}")
+        if 'lista' in request.POST:
+            if request.POST["lista"] == "add":
+                return HttpResponseRedirect(f"/produtos?lista={id}")
+            elif request.POST["lista"] == "excluir":
+                Lista.objects.get(pk=id).delete()
+                messages.success(request, "Lista excluída.")
+                return HttpResponseRedirect(reverse('index'))
+            else:
+                messages.error(request, "Dados inválidos")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        elif 'item' in request.POST:
+            try:
+                p = ProdutoLista.objects.get(pk=request.POST["item"])
+            except ProdutoLista.DoesNotExist:
+                messages.error(request, "Item não existe")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            p.delete()
+            messages.success(request, "Produto excluído.")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
 
 def carteira(request):
     pass
