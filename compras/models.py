@@ -111,10 +111,20 @@ class Historico(models.Model):
     endereco = models.CharField(max_length=500)
     data = models.DateTimeField(default=timezone.now)
     total = models.DecimalField(max_digits=10, decimal_places=2)
+    usuario = models.ForeignKey(Usuario, 
+                                on_delete=models.CASCADE, 
+                                related_name="historicos")
+
+    def __str__(self):
+        return f"Pedido {self.data}"
+    
 
 class ProdutoHistorico(models.Model):
     historico = models.ForeignKey(Historico, on_delete=models.CASCADE, related_name="produtos")
     produto = models.CharField(max_length=50)
     quantidade = models.PositiveIntegerField()
     preco = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"Produto {self.produto} em {self.historico}"
 
