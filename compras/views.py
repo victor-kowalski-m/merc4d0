@@ -282,7 +282,29 @@ def pedido(request):
         if form.is_valid():
             data = form.cleaned_data
 
+            total = 0
+            itens =[]
+
+            for produto in ProdutoLista.objects.filter(lista=data['lista']):
+                quantidade = produto.quantidade
+                preco = SupermercadoProduto.objects.get(
+                    produto=produto.produto, 
+                    supermercado=data['supermercado']
+                    ).preco
+
+                item = {
+                    'quantidade': quantidade, 
+                    'produto': produto.produto.nome,
+                    'preco': preco
+                    }
+
+                itens.append(item)
+
+                total += quantidade * preco
+
             return render(request, "compras/pagamento.html", {
+                'itens': itens,
+                'total': total,
                 'cartoes': Cartao.objects.filter(usuario=request.user),
                 'supermercado': data['supermercado'],
                 'lista': data['lista'],

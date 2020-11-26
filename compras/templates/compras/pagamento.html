@@ -2,9 +2,11 @@
 
 {% block body %}
     <h4>Total: {{ total }}</h4>
-    {% for produto in produtos %}
-        <p>{{ produto }}</p>
+    <ul>
+    {% for item in itens %}
+        <li>{{ item.quantidade }} {{ item.produto }}(s) por {{ item.preco }} cada.</li>
     {% endfor %}
+    </ul>
     <form action="{% url 'pedido' %}" method="post">
         {% csrf_token %}
         <div class="form-group">
