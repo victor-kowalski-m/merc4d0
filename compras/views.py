@@ -9,6 +9,7 @@ from django import forms
 from django.contrib import messages
 from django.contrib.messages import get_messages
 from django.forms import ModelForm
+from django.http import JsonResponse
 from .models import *
 
 # Create your views here.
@@ -280,7 +281,7 @@ def pedido(request):
             'listas': Lista.objects.filter(usuario=request.user),
             'enderecos': Endereco.objects.filter(usuario=request.user)
         })
-    elif 'cartao' not in request.POST:
+    else:
         form = FazerPedido(request.POST)
 
         if form.is_valid():
@@ -292,10 +293,10 @@ def pedido(request):
 
             for produto in ProdutoLista.objects.filter(lista=data['lista']):
                 quantidade = produto.quantidade
-                preco = SupermercadoProduto.objects.get(
+                preco = float(SupermercadoProduto.objects.get(
                     produto=produto.produto, 
                     supermercado=data['supermercado']
-                    ).preco
+                    ).preco)
 
                 item = {
                     'quantidade': quantidade, 
@@ -306,6 +307,12 @@ def pedido(request):
                 itens.append(item)
 
                 total += quantidade * preco
+
+            request.session['pedido_lista'] = data['lista'].__str__()
+            request.session['pedido_supermercado'] = data['supermercado'].__str__()
+            request.session['pedido_endereco'] = data['endereco'].__str__()
+            request.session['pedido_total'] = total
+            request.session['pedido_itens'] = itens
 
             return render(request, "compras/pagamento.html", {
                 'itens': itens,
@@ -320,13 +327,51 @@ def pedido(request):
             messages.error(request, "Dados inválidos")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    elif cartao in request.POST:
-        pass
 
 @login_required(login_url='login')
 def concluir(request):
     if request.method == "POST":
-        pass 
+        form = ConcluirPedido(request.POST)
+
+        if form.is_valid():
+            data= form.cleaned_data
+
+            if request.session.keys() >= {
+                'pedido_lista',
+                'pedido_supermercado',
+                'pedido_endereco',
+                'pedido_itens',
+                'pedido_total'
+            }:
+                h = Historico(
+                    lista=request.session['pedido_lista'],
+                    supermercado=request.session['pedido_supermercado'], 
+                    cartao=data['cartao'],
+                    endereco=request.session['pedido_endereco'],
+                    total=request.session['pedido_total']
+                    )
+                h.save()
+
+                for produto in request.session['pedido_itens']:
+                    ph = ProdutoHistorico(
+                        historico=h,
+                        produto=produto['produto'],
+                        quantidade=produto['quantidade'],
+                        preco=produto['preco']
+                        )
+                    ph.save()
+
+                messages.success(request, "Pedido feito!")
+                return HttpResponseRedirect(reverse('pedidos'))
+
+            else:
+                messages.error(request, "Não foi possível concluir o pedido.")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        else:
+            messages.error(request, "Dados inválidos")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
     else: 
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

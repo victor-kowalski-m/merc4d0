@@ -1,0 +1,14 @@
+{% extends "compras/layout.html" %}
+
+
+{% block body %}
+<h4>Seus Pedidos:</h4>
+<ul>
+{% for historico in historicos %}
+    <p>{{ historico }}</p>
+{% empty %}
+    <p>Nenhum pedido ainda.</p>
+{% endfor %}
+</ul>
+
+{% endblock %}
