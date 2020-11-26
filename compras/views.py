@@ -348,7 +348,8 @@ def concluir(request):
                     supermercado=request.session['pedido_supermercado'], 
                     cartao=data['cartao'],
                     endereco=request.session['pedido_endereco'],
-                    total=request.session['pedido_total']
+                    total=request.session['pedido_total'],
+                    usuario=request.user
                     )
                 h.save()
 
@@ -379,6 +380,8 @@ def concluir(request):
 @login_required(login_url='login')
 def historico(request):
     if request.method == "GET":
-        return render(request, "compras/historico.html")
+        return render(request, "compras/historico.html",{
+            'historicos': Historico.objects.filter(usuario=request.user)
+        })
     else:
         return render(request, "compras/historico.html")

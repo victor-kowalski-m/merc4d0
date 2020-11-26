@@ -5,7 +5,19 @@
 <h4>Seus Pedidos:</h4>
 <ul>
 {% for historico in historicos %}
-    <p>{{ historico }}</p>
+    <li>
+        <b><p>{{ historico.data|date:"d/m/y H:i" }}</p></b>
+        <p><b>Lista:</b> {{ historico.lista }}</p>
+        <p><b>Supermercado:</b> {{ historico.supermercado }}</p>
+        <p><b>Cartão:</b> {{ historico.cartao }}</p>
+        <p><b>Total:</b> {{ historico.total }}</p>
+        <p><b>Produtos:</b></p>
+        <ul>
+            {% for item in historico.produtos.all %}
+                <li>{{ item.quantidade }} {{ item.produto }}(s) por {{ item.preco }} cada.</li>
+            {% endfor %}
+        </ul>
+    </li>
 {% empty %}
     <p>Nenhum pedido ainda.</p>
 {% endfor %}
