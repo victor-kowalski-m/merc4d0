@@ -23,6 +23,11 @@ class AdicionarProduto(ModelForm):
         model = ProdutoLista
         fields = "__all__"
 
+class NovoCartao(ModelForm):
+    class Meta:
+        model = Cartao
+        fields = ['numero','cvv', 'validade', 'nome']
+
 @login_required(login_url='login')
 def index(request):
     return render(request, "compras/index.html", {
@@ -170,7 +175,20 @@ def lista(request, id):
 
 
 def carteira(request):
-    pass
+    if request.method == "GET":
+        return render(request,"compras/carteira.html", {
+            'cartoes': Cartao.objects.filter(usuario=request.user)
+        })
+    else:
+        try:
+            p = Cartao.objects.get(pk=request.POST["cartao"])
+        except ProdutoLista.DoesNotExist:
+            messages.error(request, "Cartão não existe")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        p.delete()
+        messages.success(request, "Cartão excluído.")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        
 
 def conta(request):
     pass
@@ -198,3 +216,42 @@ def criar(request):
         else:
             messages.error(request, 'Dados inválidos.')
             return render(request, "compras/criar.html")
+
+def cartao(request):
+    if request.method == "GET":
+        return render(request, "compras/cartao.html")
+
+    else:
+        form = NovoCartao(request.POST)
+
+        if form.is_valid():
+            data = form.cleaned_data
+
+            if not (data['numero'].isdigit() and data['cvv'].isdigit()):
+                messages.error(request, 'Número/CVV inválidos.')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+            if not data['nome'].isalpha():
+                messages.error(request, 'Nome inválido')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+            if (len(data['validade']) != 5 
+                or not data['validade'][:2].isdigit()
+                or data['validade'][2] != '/'
+                or not data['validade'][3:].isdigit()):
+                messages.error(request, 'Validade inválida')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+            if data['numero'] in Cartao.objects.values_list('numero', flat=True).filter(usuario=request.user):
+                messages.error(request, 'Cartão já existente.')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+            instance = form.save(commit=False)
+            instance.usuario = request.user
+            instance.save()
+            messages.success(request, 'Cartão salvo!')
+            return HttpResponseRedirect(reverse("carteira"))
+
+        else:
+            messages.error(request, 'Dados inválidos.')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

@@ -1,0 +1,26 @@
+{% extends "compras/layout.html" %}
+
+
+{% block body %}
+<h4>Seus cartões:</h4>
+<ul>
+{% for cartao in cartoes %}
+    <li>
+        <form action="{% url 'carteira' %}" method="post">
+            {% csrf_token %}
+            <span>{{ cartao.numero }}</span>
+            <input type="hidden" name="cartao" value="{{ cartao.id }}">
+            <input type="submit" class="btn btn-danger" value="X">
+        </form>
+    </li>
+    <br>
+{% empty %}
+    <p>Nenhum cartão ainda.</p>
+{% endfor %}
+</ul>
+
+<a href="{% url 'cartao'%}">
+<button type="button" class="btn btn-primary">Adicionar cartão</button>
+</a>
+
+{% endblock %}

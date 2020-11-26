@@ -14,4 +14,5 @@ urlpatterns = [
     path("lista/<int:id>", views.lista, name="lista"),
     path("pedidos", views.pedidos, name="pedidos"),
     path("criar", views.criar, name="criar"),
+    path("cartao", views.cartao, name="cartao")
 ]
