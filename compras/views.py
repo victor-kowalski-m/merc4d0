@@ -17,6 +17,10 @@ class FazerPedido(ModelForm):
         model = Pedido
         fields = ['lista', 'supermercado', 'endereco']
 
+class ConcluirPedido(ModelForm):
+    class Meta:
+        model = Pedido
+        fields = ['cartao']
 
 class NovaLista(ModelForm):
     class Meta:
@@ -276,14 +280,15 @@ def pedido(request):
             'listas': Lista.objects.filter(usuario=request.user),
             'enderecos': Endereco.objects.filter(usuario=request.user)
         })
-    else:
+    elif 'cartao' not in request.POST:
         form = FazerPedido(request.POST)
 
         if form.is_valid():
             data = form.cleaned_data
 
             total = 0
-            itens =[]
+            itens = []
+
 
             for produto in ProdutoLista.objects.filter(lista=data['lista']):
                 quantidade = produto.quantidade
@@ -314,6 +319,17 @@ def pedido(request):
         else:
             messages.error(request, "Dados inválidos")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    elif cartao in request.POST:
+        pass
+
+@login_required(login_url='login')
+def concluir(request):
+    if request.method == "POST":
+        pass 
+
+    else: 
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @login_required(login_url='login')
 def historico(request):

@@ -2,24 +2,22 @@
 
 {% block body %}
     <h4>Total: {{ total }}</h4>
+    <p>{{ itens }}</p>
     <ul>
     {% for item in itens %}
         <li>{{ item.quantidade }} {{ item.produto }}(s) por {{ item.preco }} cada.</li>
     {% endfor %}
     </ul>
-    <form action="{% url 'pedido' %}" method="post">
+    <form action="{% url 'concluir' %}" method="post">
         {% csrf_token %}
         <div class="form-group">
-            <select name="produto" class="form-control" required>
+            <select name="cartao" class="form-control" required>
                 <option selected="selected">Escolha o pagamento</option>
                 {% for cartao in cartoes %}
-                <option value="{{ cartao.id }}">{{ cartao }}</option>
+                <option value="{{ cartao }}">{{ cartao }}</option>
                 {% endfor %}
             </select>
         </div>
-        <input type="hidden" name="supermercado" value="{{ supermercado.id }}">
-        <input type="hidden" name="lista" value="{{ lista.id }}">
-        <input type="hidden" name="endereco" value="{{ endereco.id }}">
         <input class="btn btn-primary" type="submit" value="Concluir pedido">
     </form>
 {% endblock %}

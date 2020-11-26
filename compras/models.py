@@ -106,9 +106,15 @@ class Pedido(models.Model):
 
 class Historico(models.Model):
     lista =  models.CharField(max_length=50)
-    produtos = models.CharField(max_length=10000)
     supermercado = models.CharField(max_length=100)
     cartao = models.CharField(max_length=20)
     endereco = models.CharField(max_length=500)
     data = models.DateTimeField(default=timezone.now)
-    valor = models.DecimalField(max_digits=10, decimal_places=2)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+
+class ProdutoHistorico(models.Model):
+    historico = models.ForeignKey(Historico, on_delete=models.CASCADE, related_name="produtos")
+    produto = models.CharField(max_length=50)
+    quantidade = models.PositiveIntegerField()
+    preco = models.DecimalField(max_digits=10, decimal_places=2)
+
