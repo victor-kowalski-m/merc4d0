@@ -12,6 +12,11 @@ from django.forms import ModelForm
 from .models import *
 
 # Create your views here.
+class FazerPedido(ModelForm):
+    class Meta:
+        model = Pedido
+        fields = ['lista', 'supermercado', 'endereco']
+
 
 class NovaLista(ModelForm):
     class Meta:
@@ -54,6 +59,7 @@ def login_view(request):
     else:
         return render(request, "compras/login.html")
 
+@login_required(login_url='login')
 def logout_view(request):
     logout(request)
     messages.success(request, 'Até logo.')
@@ -89,6 +95,7 @@ def registrar(request):
     else:
         return render(request, "compras/registrar.html")
 
+@login_required(login_url='login')
 def produtos(request):
     if request.method == "GET":
         params = request.GET
@@ -135,12 +142,12 @@ def produtos(request):
             "listas": Lista.objects.filter(usuario=request.user)
         })
 
+@login_required(login_url='login')
 def supermercados(request):
     pass
 
-def pedidos(request):
-    pass
 
+@login_required(login_url='login')
 def lista(request, id):
     if request.method == "GET":
         produtos = (ProdutoLista.objects.filter(lista=id))
@@ -172,8 +179,7 @@ def lista(request, id):
             messages.success(request, "Produto excluído.")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-
-
+@login_required(login_url='login')
 def carteira(request):
     if request.method == "GET":
         return render(request,"compras/carteira.html", {
@@ -189,10 +195,11 @@ def carteira(request):
         messages.success(request, "Cartão excluído.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         
-
+@login_required(login_url='login')
 def conta(request):
     pass
 
+@login_required(login_url='login')
 def criar(request):
     if request.method == "GET":
         return render(request, "compras/criar.html")
@@ -217,6 +224,7 @@ def criar(request):
             messages.error(request, 'Dados inválidos.')
             return render(request, "compras/criar.html")
 
+@login_required(login_url='login')
 def cartao(request):
     if request.method == "GET":
         return render(request, "compras/cartao.html")
@@ -255,3 +263,39 @@ def cartao(request):
         else:
             messages.error(request, 'Dados inválidos.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url='login')
+def pedidos(request):
+    return render(request, "compras/pedidos.html")
+
+@login_required(login_url='login')
+def pedido(request):
+    if request.method == "GET":
+        return render(request, "compras/pedido.html", {
+            'supermercados': Supermercado.objects.all(),
+            'listas': Lista.objects.filter(usuario=request.user),
+            'enderecos': Endereco.objects.filter(usuario=request.user)
+        })
+    else:
+        form = FazerPedido(request.POST)
+
+        if form.is_valid():
+            data = form.cleaned_data
+
+            return render(request, "compras/pagamento.html", {
+                'cartoes': Cartao.objects.filter(usuario=request.user),
+                'supermercado': data['supermercado'],
+                'lista': data['lista'],
+                'endereco': data['endereco']
+            })
+
+        else:
+            messages.error(request, "Dados inválidos")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@login_required(login_url='login')
+def historico(request):
+    if request.method == "GET":
+        return render(request, "compras/historico.html")
+    else:
+        return render(request, "compras/historico.html")

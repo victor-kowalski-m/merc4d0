@@ -1,0 +1,23 @@
+{% extends "compras/layout.html" %}
+
+{% block body %}
+    <h4>Total: {{ total }}</h4>
+    {% for produto in produtos %}
+        <p>{{ produto }}</p>
+    {% endfor %}
+    <form action="{% url 'pedido' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <select name="produto" class="form-control" required>
+                <option selected="selected">Escolha o pagamento</option>
+                {% for cartao in cartoes %}
+                <option value="{{ cartao.id }}">{{ cartao }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <input type="hidden" name="supermercado" value="{{ supermercado.id }}">
+        <input type="hidden" name="lista" value="{{ lista.id }}">
+        <input type="hidden" name="endereco" value="{{ endereco.id }}">
+        <input class="btn btn-primary" type="submit" value="Concluir pedido">
+    </form>
+{% endblock %}
