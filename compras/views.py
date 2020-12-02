@@ -38,6 +38,11 @@ class NovoCartao(ModelForm):
         model = Cartao
         fields = ['numero','cvv', 'validade', 'nome']
 
+class NovoEndereco(ModelForm):
+    class Meta:
+        model = Endereco
+        fields = ['cep','rua', 'numero', 'bairro', 'estado', 'cidade', 'complemento']
+
 @login_required(login_url='login')
 def index(request):
     return render(request, "compras/index.html", {
@@ -193,7 +198,7 @@ def carteira(request):
     else:
         try:
             p = Cartao.objects.get(pk=request.POST["cartao"])
-        except ProdutoLista.DoesNotExist:
+        except Cartao.DoesNotExist:
             messages.error(request, "Cartão não existe")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         p.delete()
@@ -385,3 +390,57 @@ def historico(request):
         })
     else:
         return render(request, "compras/historico.html")
+
+@login_required(login_url='login')
+def enderecos(request):
+    if request.method == "GET":
+        return render(request, "compras/enderecos.html", {
+            "enderecos": Endereco.objects.filter(usuario=request.user)
+        })
+
+    else:
+        try:
+            e = Endereco.objects.get(pk=request.POST["endereco"])
+        except Endereco.DoesNotExist:
+            messages.error(request, "Endereço não existe")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        e.delete()
+        messages.success(request, "Endereço excluído.")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    
+@login_required(login_url='login')
+def endereco(request):
+    if request.method == "GET":
+        return render(request, "compras/endereco.html", {
+            "estados":estados
+        })
+
+    else:
+        form = NovoEndereco(request.POST)
+
+        if form.is_valid():
+            data = form.cleaned_data
+
+            if not (data['numero'].isdigit() and data['cep'].isdigit()):
+                messages.error(request, 'Número/CEP inválidos. Apenas entrada numérica.')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+            if data['estado'] not in [e[0] for e in estados]:
+                messages.error(request, 'Estado inválido')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+            if len(data['cep']) != 8 :
+                messages.error(request, 'CEP inválido')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+            instance = form.save(commit=False)
+            instance.usuario = request.user
+            instance.save()
+            messages.success(request, 'Endereço salvo!')
+            return HttpResponseRedirect(reverse("enderecos"))
+
+        else:
+            messages.error(request, 'Dados inválidos.')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    

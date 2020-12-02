@@ -2,7 +2,6 @@
 
 {% block body %}
     <h4>Total: {{ total }}</h4>
-    <p>{{ itens }}</p>
     <ul>
     {% for item in itens %}
         <li>{{ item.quantidade }} {{ item.produto }}(s) por {{ item.preco }} cada.</li>

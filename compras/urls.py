@@ -17,5 +17,7 @@ urlpatterns = [
     path("cartao", views.cartao, name="cartao"),
     path("pedido", views.pedido, name="pedido"),
     path("historico", views.historico, name="historico"),
-    path("concluir", views.concluir, name="concluir")
+    path("concluir", views.concluir, name="concluir"),
+    path("enderecos", views.enderecos, name="enderecos"),
+    path("endereco", views.endereco, name="endereco"),
 ]

@@ -26,7 +26,7 @@ class Endereco(models.Model):
     )
 
     cidade = models.CharField(max_length=100)
-    complemento = models.CharField(max_length=100)
+    complemento = models.CharField(max_length=100, blank=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, 
                                 related_name="enderecos")
     def __str__(self):
