@@ -46,7 +46,7 @@ class NovoEndereco(ModelForm):
 @login_required(login_url='login')
 def index(request):
     return render(request, "compras/index.html", {
-        "listas": Lista.objects.filter(usuario=request.user)
+        "listas": Lista.objects.filter(usuario=request.user).order_by('nome')
 
     })
 
@@ -111,14 +111,14 @@ def produtos(request):
         params = request.GET
         if 'lista' in params:
             return render(request, "compras/produtos.html", {
-            "produtos": Produto.objects.all(),
-            "listas": Lista.objects.filter(usuario=request.user),
+            "produtos": Produto.objects.order_by('nome'),
+            "listas": Lista.objects.filter(usuario=request.user).order_by('nome'),
             'l': params['lista']
         })
         else:
             return render(request, "compras/produtos.html", {
-            "produtos": Produto.objects.all(),
-            "listas": Lista.objects.filter(usuario=request.user)
+            "produtos": Produto.objects.order_by('nome'),
+            "listas": Lista.objects.filter(usuario=request.user).order_by('nome')
         })
 
     else:
@@ -139,11 +139,16 @@ def produtos(request):
             else:
                 form.save()
                 messages.success(request, "Adicionado!")
+
+            return HttpResponseRedirect(f"lista/{data['lista'].id}")
             
+            '''
             return render(request, "compras/produtos.html", {
             "produtos": Produto.objects.all(),
             "listas": Lista.objects.filter(usuario=request.user)
+            
         })
+            '''
 
         else:
             messages.error(request, "Inválido")
@@ -160,7 +165,7 @@ def supermercados(request):
 @login_required(login_url='login')
 def lista(request, id):
     if request.method == "GET":
-        produtos = (ProdutoLista.objects.filter(lista=id))
+        produtos = (ProdutoLista.objects.filter(lista=id).order_by('produto__nome'))
         nomelista = Lista.objects.get(pk=id).nome
         return render(request, 'compras/lista.html', {
             "produtos": produtos,
@@ -249,7 +254,7 @@ def cartao(request):
                 messages.error(request, 'Número/CVV inválidos.')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-            if not data['nome'].isalpha():
+            if not all(chr.isalpha() or chr.isspace() for chr in data['nome']):
                 messages.error(request, 'Nome inválido')
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -282,9 +287,12 @@ def pedidos(request):
 def pedido(request):
     if request.method == "GET":
         return render(request, "compras/pedido.html", {
-            'supermercados': Supermercado.objects.all(),
-            'listas': Lista.objects.filter(usuario=request.user),
-            'enderecos': Endereco.objects.filter(usuario=request.user)
+            'supermercados': Supermercado.objects.all().order_by(
+                "nome","unidade"),
+            'listas': Lista.objects.filter(usuario=request.user
+            ).order_by("nome"),
+            'enderecos': Endereco.objects.filter(usuario=request.user
+            ).order_by("rua")
         })
     else:
         form = FazerPedido(request.POST)
@@ -395,7 +403,8 @@ def historico(request):
 def enderecos(request):
     if request.method == "GET":
         return render(request, "compras/enderecos.html", {
-            "enderecos": Endereco.objects.filter(usuario=request.user)
+            "enderecos": Endereco.objects.filter(usuario=request.user
+            ).order_by("rua")
         })
 
     else:
