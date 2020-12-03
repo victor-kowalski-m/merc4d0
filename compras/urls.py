@@ -20,4 +20,5 @@ urlpatterns = [
     path("concluir", views.concluir, name="concluir"),
     path("enderecos", views.enderecos, name="enderecos"),
     path("endereco", views.endereco, name="endereco"),
+    path("senha", views.senha, name="senha"),
 ]

@@ -7,7 +7,7 @@
 {% for lista in listas %}
     <li><a href="{% url 'lista' lista.id %}">{{ lista.nome }}</a></li>
 {% empty %}
-    <p>Nenhuma lista ainda.</p>
+    <p style="text-indent: -2.5em;">Nenhuma lista ainda.</p>
 {% endfor %}
 </ul>
 

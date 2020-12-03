@@ -106,8 +106,8 @@ def registrar(request):
             user = Usuario.objects.create_user(
                 username, email, password)
             user.cpf = cpf
-            user.first = first
-            user.last = last            
+            user.first_name = first
+            user.last_name = last            
             user.save()
         except IntegrityError:
             messages.error(request, 'Usuário já existe.')
@@ -224,7 +224,8 @@ def carteira(request):
         
 @login_required(login_url='login')
 def conta(request):
-    return HttpResponse('<h1> Em construção...</h1>')
+    return render(request, 'compras/conta.html')
+    #return HttpResponse('<h1> Em construção...</h1>')
 
 @login_required(login_url='login')
 def criar(request):
@@ -468,4 +469,24 @@ def endereco(request):
             messages.error(request, 'Dados inválidos.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    
+@login_required(login_url='login')
+def senha(request):
+    if request.method == "GET":
+        return render(request, "compras/senha.html")
+    else:
+        senha = request.POST['senha']
+        confirma = request.POST['confirma']
+
+        if confirma != senha:
+            messages.error(request, 'Senhas precisam ser iguais.')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        antiga = request.user.password
+        u = request.user 
+        u.set_password(senha)
+        u.save()
+        login(request, u)
+
+        messages.success(request, 'Senha alterada.')
+        return HttpResponseRedirect(reverse('conta'))
+        

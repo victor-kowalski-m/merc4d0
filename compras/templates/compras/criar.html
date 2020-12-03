@@ -1,6 +1,7 @@
 {% extends "compras/layout.html" %}
 
 {% block body %}
+<h4>Nova Lista:</h4>
     <form action="{% url 'criar' %}" method="post" autocomplete="off">
         {% csrf_token %}
         <div class="form-group">
