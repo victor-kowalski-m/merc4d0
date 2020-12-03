@@ -12,7 +12,6 @@ from django.forms import ModelForm
 from django.http import JsonResponse
 from .models import *
 
-# Create your views here.
 class FazerPedido(ModelForm):
     class Meta:
         model = Pedido
@@ -80,22 +79,35 @@ def registrar(request):
         username = request.POST["username"]
         email = request.POST["email"]
         cpf = request.POST["cpf"]
+        first = request.POST["nome"]
+        last = request.POST["sobrenome"]
+        password = request.POST["password"]
+        confirmation = request.POST["confirmation"]
+
+        if '' in [username, email, cpf, first, last, password, confirmation]:
+            messages.error(request, 'Dados inválidos.')
+            return render(request, "compras/registrar.html")
+
+        if not "@" in email[1:-1]:
+            messages.error(request, 'Email inválido.')
+            return render(request, "compras/registrar.html")
 
         if not cpf.isdigit():
             messages.error(request, 'CPF inválido.')
             return render(request, "compras/registrar.html")
 
-        # Ensure password matches confirmation
-        password = request.POST["password"]
-        confirmation = request.POST["confirmation"]
+
         if password != confirmation:
             messages.error(request, 'Senhas precisam ser iguais.')
             return render(request, "compras/registrar.html")
 
         # Attempt to create new user
         try:
-            user = Usuario.objects.create_user(username, email, password)
+            user = Usuario.objects.create_user(
+                username, email, password)
             user.cpf = cpf
+            user.first = first
+            user.last = last            
             user.save()
         except IntegrityError:
             messages.error(request, 'Usuário já existe.')
@@ -159,7 +171,7 @@ def produtos(request):
 
 @login_required(login_url='login')
 def supermercados(request):
-    pass
+    return HttpResponse('<h1> Em construção...</h1>')
 
 
 @login_required(login_url='login')
@@ -212,7 +224,7 @@ def carteira(request):
         
 @login_required(login_url='login')
 def conta(request):
-    pass
+    return HttpResponse('<h1> Em construção...</h1>')
 
 @login_required(login_url='login')
 def criar(request):
@@ -349,6 +361,10 @@ def concluir(request):
         if form.is_valid():
             data= form.cleaned_data
 
+            if Cartao.objects.get(pk=data['cartao'].id).usuario != request.user:
+                messages.error(request, "Hack aqui não rapa")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
             if request.session.keys() >= {
                 'pedido_lista',
                 'pedido_supermercado',
@@ -394,7 +410,7 @@ def concluir(request):
 def historico(request):
     if request.method == "GET":
         return render(request, "compras/historico.html",{
-            'historicos': Historico.objects.filter(usuario=request.user)
+            'historicos': Historico.objects.filter(usuario=request.user).reverse()
         })
     else:
         return render(request, "compras/historico.html")
