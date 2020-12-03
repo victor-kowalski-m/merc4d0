@@ -489,4 +489,7 @@ def senha(request):
 
         messages.success(request, 'Senha alterada.')
         return HttpResponseRedirect(reverse('conta'))
-        
+
+def check_user(request):
+    username = request.GET.get('u', '')
+    return JsonResponse(Usuario.objects.filter(username=username).count(), safe=False)

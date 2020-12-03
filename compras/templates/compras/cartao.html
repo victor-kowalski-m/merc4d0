@@ -5,6 +5,7 @@
         {% csrf_token %}
         <div class="form-group">
             <input  autofocus class="form-control" type="text" required name="numero" placeholder="Número">
+            <p id='bandeira' style="display:none"></p>
         </div>
         <div class="form-group">
             <input class="form-control" type="text" required name="cvv" placeholder="CVV">
@@ -17,4 +18,37 @@
         </div>
         <input class="btn btn-primary" type="submit" value="Adicionar">
     </form>
+{% endblock %}
+
+{% block script %}
+<script>
+    function get_bandeira()
+            {   
+                let bandeira = document.querySelector('#bandeira');
+                let numero = document.querySelector("[name='numero']");
+                numero.addEventListener('keyup', function(event) {
+                    bandeira.style.display = "inline";
+                    if ([51, 52, 53, 54, 55].includes(parseInt(numero.value.slice(0, 2))))
+                    {
+                        bandeira.innerHTML = "MASTERCARD";
+                    }
+                    else if ([34, 37].includes(parseInt(numero.value.slice(0, 2))))
+                    {
+                        bandeira.innerHTML = "AMEX";
+                    }
+                    else if ([4].includes(parseInt(numero.value[0])))
+                    {
+                        bandeira.innerHTML = "VISA";
+                    }
+                    else
+                    {
+                        bandeira.innerHTML = "";
+                        bandeira.style.display = "none";
+                    }
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', get_bandeira);
+
+</script>
 {% endblock %}
