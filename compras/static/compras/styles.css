@@ -1,5 +1,6 @@
 body {
     padding: 20px;
+    font-size: large;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -41,15 +42,6 @@ body .form-control
     width: auto;
 }
 
-body td .form-control
-{
-    /* center form controls */
-    display: inline-block;
-
-    /* override Bootstrap's 100% width for form controls */
-    width: 100%;
-}
-
 body
 {
     /* scroll horizontally as needed */
@@ -71,4 +63,10 @@ ul {
   display: table;
   margin: 0 auto;
   padding: 0;
+}
+
+.table{
+  width: auto;
+  display: inline-block;
+
 }

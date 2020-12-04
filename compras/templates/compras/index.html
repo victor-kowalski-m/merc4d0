@@ -9,7 +9,7 @@
     {% if forloop.counter0 > 0 %}
     <hr>
     {% endif %}
-    <li><h5><a href="{% url 'lista' lista.id %}">{{ lista.nome }}</a></h5></li>
+    <li><h4><a href="{% url 'lista' lista.id %}">{{ lista.nome }}</a></h4></li>
 {% empty %}
     <p style="text-indent: -2.5em;">Nenhuma lista ainda.</p>
 {% endfor %}

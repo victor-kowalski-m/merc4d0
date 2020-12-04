@@ -3,25 +3,38 @@
 {% block body %}
     <h4>{{nome}}</h4>
     <br>
-    <ul>
-    {% for produto in produtos %}
-        <li>
-            {% if forloop.counter0 > 0 %}
-            <hr>
-            {% endif %}
-            <form action="{% url 'lista' id %}" method="post">
-                {% csrf_token %}
-                <span><b>{{ produto.produto.nome }}</b> | Quantidade: {{ produto.quantidade }} </span>
-                <input type="hidden" name="item" value="{{ produto.id }}">
-                <input type="submit" class="btn btn-danger" value="X">
-            </form>
-        </li>
-    {% empty %}
+    {% if produtos %}
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Produto</th>
+                    <th scope="col">Quantidade</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produto in produtos %}
+                    <tr>
+                        <td>{{ produto.produto.nome }}</td>
+                        <td>{{ produto.quantidade }}</td>
+                        <td>
+                            <form action="{% url 'lista' id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="item" value="{{ produto.id }}">
+                                <button type="submit" class="close" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br><br>
+    {% else %}
         <p>Lista vazia.</p>
-    {% endfor %}
-    </ul>
-    <br>
-    <br>
+        <br>
+    {% endif %}
     <form action="{% url 'lista' id %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="lista" value="add">
