@@ -2,6 +2,7 @@
 
 {% block body %}
 <h4>Sua conta:</h4>
+<br>
 <p><b>Usuário:</b> {{ user.username }}</p>
 <p><b>Nome:</b> {{ user.first_name }}</p>
 <p><b>Sobrenome:</b> {{ user.last_name }}</p>
@@ -9,7 +10,7 @@
 <p><b>CPF:</b> {{ user.cpf }}</p>
 <p><b>Ingressou em:</b> {{ user.date_joined|date:"d/m/y H:i" }}</p>
 <p><b>Nº de pedidos:</b> {{ user.historicos.count }}</p>
-
+<br>
 <a href="{% url 'senha' %}">
     <button type="button" class="btn btn-primary">Alterar senha</button>
 </a>

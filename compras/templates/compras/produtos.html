@@ -2,19 +2,18 @@
 
 {% block body %}
     <h4>Adicionar produto:</h4>
+    <br>
     <form action="{% url 'produtos' %}" method="post">
         {% csrf_token %}
         <div class="form-group">
-        <select name="produto" class="form-control" required>
-            <option selected="selected">Escolha o produto</option>
+        <select name="produto" class="selectpicker" data-live-search="true" title="Escolha o produto" required>
             {% for produto in produtos %}
             <option value="{{ produto.id }}">{{ produto.nome }}</option>
             {% endfor %}
         </select>
         </div>
         <div class="form-group">
-            <select name="lista" class="form-control" required place>
-                <option selected="selected">Escolha a lista</option>
+            <select name="lista" class="selectpicker" data-live-search="true" title="Escolha a lista" required>
                 {% for lista in listas %}
                     {% if l %}
                         {% if lista.id|stringformat:"s" == l %}
@@ -27,6 +26,7 @@
                     {% endif %}
                 {% endfor %}
             </select>
+            <br>
             <a href="{% url 'criar' %}">Criar nova lista</a>
             </div>
         <div class="form-group">

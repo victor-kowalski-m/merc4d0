@@ -3,6 +3,7 @@
 
 {% block body %}
 <h4>Seus Pedidos:</h4>
+<br>
 <ul>
 {% for historico in historicos reversed %}
     <li>
@@ -18,7 +19,7 @@
             {% endfor %}
         </ul>
     </li>
-    <br>
+    <br><hr><br>
 {% empty %}
     <p style="text-indent: -2.5em;">Nenhum pedido ainda.</p>
 {% endfor %}

@@ -19,7 +19,8 @@ a {
 }
 
 a:hover {
-  color:#a600a6;
+  color:rgb(177, 2, 177);
+  text-decoration: none;
 }
 
 .btn-primary {
@@ -28,5 +29,46 @@ a:hover {
 }
 
 .btn-primary:hover{
-  background-color:#a600a6;
+  background-color:rgb(177, 2, 177);;
+}
+
+body .form-control
+{
+    /* center form controls */
+    display: inline-block;
+
+    /* override Bootstrap's 100% width for form controls */
+    width: auto;
+}
+
+body td .form-control
+{
+    /* center form controls */
+    display: inline-block;
+
+    /* override Bootstrap's 100% width for form controls */
+    width: 100%;
+}
+
+body
+{
+    /* scroll horizontally as needed */
+    overflow-x: auto;
+
+    /* center contents */
+    text-align: center;
+}
+
+body img
+{
+    /* constrain images on small screens */
+    max-width: 100%;
+}
+
+
+ul {
+  list-style-type: none;
+  display: table;
+  margin: 0 auto;
+  padding: 0;
 }

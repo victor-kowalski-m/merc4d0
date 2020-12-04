@@ -2,11 +2,11 @@
 
 {% block body %}
     <h4>Fazer pedido:</h4>
+    <br>
     <form action="{% url 'pedido' %}" method="post">
         {% csrf_token %}
         <div class="form-group">
-            <select name="lista" class="form-control" required place>
-                <option selected="selected">Escolha a lista</option>
+            <select name="lista" class="selectpicker" data-live-search="true" title="Escolha a lista" required>
                 {% for lista in listas %}
                     {% if request.GET.lista %}
                         {% if lista.id|stringformat:"s" == request.GET.lista %}
@@ -19,20 +19,20 @@
                     {% endif %}
                 {% endfor %}
             </select>
+            <br>
             <a href="{% url 'criar' %}">Criar nova lista</a>
         </div>
         <div class="form-group">
-            <select name="endereco" class="form-control" required>
-                <option selected="selected">Escolha o endereco de entrega</option>
+            <select name="endereco" class="selectpicker" data-live-search="true" title="Escolha o endereço de entrega" required>
                 {% for endereco in enderecos %}
                 <option value="{{ endereco.id }}">{{ endereco }}</option>
                 {% endfor %}
             </select>
+            <br>
         <a href="{% url 'endereco' %}">Adicionar endereço</a>
         </div>
         <div class="form-group">
-            <select name="supermercado" class="form-control" required>
-                <option selected="selected">Escolha o supermercado</option>
+            <select name="supermercado" class="selectpicker" data-live-search="true" title="Escolha o supermercado" required>
                 {% for supermercado in supermercados %}
                 <option value="{{ supermercado.id }}">{{ supermercado }}</option>
                 {% endfor %}

@@ -4,7 +4,7 @@
 {% block body %}
 
     <h2>Registre-se</h2>
-
+    <br>
     <form action="{% url 'registrar' %}" method="post" autocomplete="off">
         {% csrf_token %}
         <div class="form-group">
@@ -35,7 +35,7 @@
         </div>
         <input class="btn btn-primary" type="submit" value="Register">
     </form>
-
+    <br>
     Já tem uma conta? <a href="{% url 'login' %}">Faça o login.</a>
 
 

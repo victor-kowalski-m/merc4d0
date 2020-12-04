@@ -3,8 +3,12 @@
 
 {% block body %}
 <h4>Seus endereços:</h4>
+<br>
 <ul>
 {% for endereco in enderecos %}
+    {% if forloop.counter0 > 0 %}
+    <hr>
+    {% endif %}
     <li>
         <form action="{% url 'enderecos' %}" method="post">
             {% csrf_token %}
@@ -13,12 +17,11 @@
             <input type="submit" class="btn btn-danger" value="X">
         </form>
     </li>
-    <br>
 {% empty %}
     <p style="text-indent: -2.5em;">Nenhum endereço ainda.</p>
 {% endfor %}
 </ul>
-
+<br><br>
 <a href="{% url 'endereco' %}">
 <button type="button" class="btn btn-primary">Adicionar endereço</button>
 </a>

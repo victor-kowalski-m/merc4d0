@@ -3,9 +3,13 @@
 
 {% block body %}
 <h4>Seus cartões:</h4>
+<br>
 <ul>
 {% for cartao in cartoes %}
     <li>
+        {% if forloop.counter0 > 0 %}
+            <hr>
+        {% endif %}
         <form action="{% url 'carteira' %}" method="post">
             {% csrf_token %}
             <span>{{ cartao.numero }}</span>
@@ -13,12 +17,11 @@
             <input type="submit" class="btn btn-danger" value="X">
         </form>
     </li>
-    <br>
 {% empty %}
     <p style="text-indent: -2.5em;">Nenhum cartão ainda.</p>
 {% endfor %}
 </ul>
-
+<br><br>
 <a href="{% url 'cartao'%}">
 <button type="button" class="btn btn-primary">Adicionar cartão</button>
 </a>
