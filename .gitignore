@@ -7,3 +7,5 @@ merc4d0/__pycache__/
 compras/migrations/__pycache__/
 
 .pyc
+
+db.sqlite3
