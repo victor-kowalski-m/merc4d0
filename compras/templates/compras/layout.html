@@ -31,37 +31,40 @@
     </script>
 
 </head>
-
 <body>
-    <h1><a href="{% url 'index' %}"> <img src="{%  static 'compras/LogoMerc4d0.png' %}" alt="LogoMerc4d0"></a></h1>
+    <section>
+        {% if user.is_authenticated %}
+        <p>Logado como <b>{{ user.username }}</b>.</p>
+        {% else %}
+        <p>Não logado.</p>
+        {% endif %}
+    </section>
+    <h1><a href="{% url 'index' %}"> <img src="{%  static 'compras/LogoMerc4d0.png' %}" id="LogoMerc4d0"></a></h1>
     <h4>
-        <nav>
-            {% if not user.is_authenticated %}
-            <a href="{% url 'login' %}">Login</a>
-            <span>|</span>
-            <a href="{% url 'registrar' %}">Registrar-se</a>
-            {% else %}
-            <a href="{% url 'index' %}">Suas listas</a>
-            <span>|</span>
-            <a href="{% url 'acompanhamentos' %}">Seus Acompanhamentos</a>
-            <span>|</span>
-            <a href="{% url 'pedidos' %}">Pedidos</a>
-            <span>|</span>
-            <a href="{% url 'carteira' %}">Carteira</a>
-            <span>|</span>
-            <a href="{% url 'enderecos' %}">Endereços</a>
-            <span>|</span>
-            <a href="{% url 'conta' %}">Conta</a>
-            <span>|</span>
-            <a href="{% url 'logout' %}">Logout</a>
-            {% endif %}
+        <nav id=navegacao-principal>
+            <ul>
+                {% if not user.is_authenticated %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <span>|</span>
+                <li><a href="{% url 'registrar' %}">Registrar-se</a></li>
+                {% else %}
+                <li><a href="{% url 'index' %}">Suas listas</a></li>
+                <span>|</span>
+                <li><a href="{% url 'acompanhamentos' %}">Seus Acompanhamentos</a></li>
+                <span>|</span>
+                <li><a href="{% url 'pedidos' %}">Pedidos</a></li>
+                <span>|</span>
+                <li><a href="{% url 'carteira' %}">Carteira</a></li>
+                <span>|</span>
+                <li><a href="{% url 'enderecos' %}">Endereços</a></li>
+                <span>|</span>
+                <li><a href="{% url 'conta' %}">Conta</a></li>
+                <span>|</span>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% endif %}
+            </ul>
         </nav>
     </h4>
-    {% if user.is_authenticated %}
-    <p>Logado como <b>{{ user.username }}</b>.</p>
-    {% else %}
-    <p>Não logado.</p>
-    {% endif %}
     <hr>
     {% if messages %}
     <ul class="messages">

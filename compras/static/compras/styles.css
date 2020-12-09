@@ -26,11 +26,36 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
+section {
+  text-align: left;
+}
+
+nav#navegacao-principal {
+  justify-content : center;
+  color: var(--primary-color);
+  display: flex;
+  flex-direction: row;
+}
+
+nav#navegacao-principal ul {
+  margin: 0;
+  padding: 0;
+}
+
+nav#navegacao-principal li {
+  display: inline-block;
+  padding: 10px;
+}
+
 a {
   color: var(--primary-color);
 }
 
-img {
+span {
+  color: var(--secondary-background);
+}
+
+img#LogoMerc4d0 {
   width: 25%;
 }
 
