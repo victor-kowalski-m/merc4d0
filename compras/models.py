@@ -113,6 +113,9 @@ class Pedido(models.Model):
     lista = models.ForeignKey(Lista,
                                 on_delete=models.CASCADE,
                                 related_name="pedidos")
+    acompanhamento = models.ForeignKey(Acompanhamento,
+                                on_delete=models.CASCADE,
+                                related_name="acompanhamentos", blank=True, null=True)
     cartao = models.ForeignKey(Cartao,
                                 on_delete=models.CASCADE,
                                 related_name="pedidos")
@@ -125,6 +128,7 @@ class Pedido(models.Model):
 
 class Historico(models.Model):
     lista =  models.CharField(max_length=50)
+    acompanhamento =  models.CharField(max_length=50, blank=True)
     supermercado = models.CharField(max_length=100)
     cartao = models.CharField(max_length=20)
     endereco = models.CharField(max_length=500)

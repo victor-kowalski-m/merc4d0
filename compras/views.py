@@ -15,7 +15,7 @@ from .models import *
 class FazerPedido(ModelForm):
     class Meta:
         model = Pedido
-        fields = ['lista', 'supermercado', 'endereco']
+        fields = ['lista', 'acompanhamento','supermercado', 'endereco']
 
 class ConcluirPedido(ModelForm):
     class Meta:
@@ -388,6 +388,8 @@ def pedido(request):
                 "nome","unidade"),
             'listas': Lista.objects.filter(usuario=request.user
             ).order_by("nome"),
+            'acompanhamentos': Acompanhamento.objects.filter(usuario=request.user
+            ).order_by("nome"),
             'enderecos': Endereco.objects.filter(usuario=request.user
             ).order_by("rua")
         })
@@ -399,10 +401,15 @@ def pedido(request):
 
             total = 0
             itens = []
-
+            
+            itens_despensa = ProdutoAcompanhamento.objects.filter(acompanhamento=data['acompanhamento']) 
+            produto_despensa = ProdutoAcompanhamento.objects.values_list('produto', flat=True).filter(acompanhamento=data['acompanhamento']) 
 
             for produto in ProdutoLista.objects.filter(lista=data['lista']):
                 quantidade = produto.quantidade
+                if produto.produto in produto_despensa:
+                    #quant_despensa = itens_despensa.get()
+                    pass
                 preco = float(SupermercadoProduto.objects.get(
                     produto=produto.produto, 
                     supermercado=data['supermercado']
@@ -419,6 +426,7 @@ def pedido(request):
                 total += quantidade * preco
 
             request.session['pedido_lista'] = data['lista'].__str__()
+            request.session['pedido_acompanhamento'] = data['acompanhamento'].__str__()
             request.session['pedido_supermercado'] = data['supermercado'].__str__()
             request.session['pedido_endereco'] = data['endereco'].__str__()
             request.session['pedido_total'] = total
@@ -430,6 +438,7 @@ def pedido(request):
                 'cartoes': Cartao.objects.filter(usuario=request.user),
                 'supermercado': data['supermercado'],
                 'lista': data['lista'],
+                'acompanhamento': data['acompanhamento'],
                 'endereco': data['endereco']
             })
 
@@ -452,6 +461,7 @@ def concluir(request):
 
             if request.session.keys() >= {
                 'pedido_lista',
+                'pedido_acompanhamento',
                 'pedido_supermercado',
                 'pedido_endereco',
                 'pedido_itens',
@@ -459,6 +469,7 @@ def concluir(request):
             }:
                 h = Historico(
                     lista=request.session['pedido_lista'],
+                    acompanhamento=request.session['pedido_acompanhamento'],
                     supermercado=request.session['pedido_supermercado'], 
                     cartao=data['cartao'],
                     endereco=request.session['pedido_endereco'],

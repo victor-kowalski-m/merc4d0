@@ -23,6 +23,15 @@
             <a href="{% url 'criar' %}">Criar nova lista</a>
         </div>
         <div class="form-group">
+            <select name="acompanhamento" class="selectpicker" data-live-search="true" title="Escolha a despensa" required>
+                {% for acompanhamento in acompanhamentos %}
+                        <option value="{{ acompanhamento.id }}">{{ acompanhamento.nome }}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <a href="{% url 'criar_acompanhamento' %}">Criar nova despensa</a>
+        </div>
+        <div class="form-group">
             <select name="endereco" class="selectpicker" data-live-search="true" title="Escolha o endereço de entrega" required>
                 {% for endereco in enderecos %}
                 <option value="{{ endereco.id }}">{{ endereco }}</option>
