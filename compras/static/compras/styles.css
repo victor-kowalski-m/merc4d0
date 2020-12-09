@@ -10,8 +10,15 @@
 }
 
 body {
-    padding: 20px;
-    font-size: large;
+  padding: 10px;
+  font-size: large;
+  height: 100vh;
+  min-height: 500px;
+  /* min-width: 1000px; */
+}
+
+main {
+  height: 92%;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -28,6 +35,10 @@ input[type=number] {
 
 section {
   text-align: left;
+}
+
+b {
+  color: var(--secondary-background);
 }
 
 nav#navegacao-principal {
@@ -56,7 +67,7 @@ span {
 }
 
 img#LogoMerc4d0 {
-  width: 25%;
+  width: 280px;
 }
 
 a:hover {
@@ -97,7 +108,6 @@ body img
     max-width: 100%;
 }
 
-
 ul {
   list-style-type: none;
   display: table;
@@ -108,5 +118,8 @@ ul {
 .table{
   width: auto;
   display: inline-block;
+}
 
+footer {
+  height: 8%;
 }

@@ -32,55 +32,56 @@
 
 </head>
 <body>
-    <section>
-        {% if user.is_authenticated %}
-        <p>Logado como <b>{{ user.username }}</b>.</p>
-        {% else %}
-        <p>Não logado.</p>
+    <main>
+        <section>
+            {% if user.is_authenticated %}
+            <p>Logado como <b>{{ user.username }}</b>.</p>
+            {% else %}
+            <p>Não logado.</p>
+            {% endif %}
+        </section>
+        <h1><a href="{% url 'index' %}"> <img src="{%  static 'compras/LogoMerc4d0.png' %}" id="LogoMerc4d0"></a></h1>
+        <h4>
+            <nav id=navegacao-principal>
+                <ul>
+                    {% if not user.is_authenticated %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <span>|</span>
+                    <li><a href="{% url 'registrar' %}">Registrar-se</a></li>
+                    {% else %}
+                    <li><a href="{% url 'index' %}">Suas listas</a></li>
+                    <span>|</span>
+                    <li><a href="{% url 'acompanhamentos' %}">Seus Acompanhamentos</a></li>
+                    <span>|</span>
+                    <li><a href="{% url 'pedidos' %}">Pedidos</a></li>
+                    <span>|</span>
+                    <li><a href="{% url 'carteira' %}">Carteira</a></li>
+                    <span>|</span>
+                    <li><a href="{% url 'enderecos' %}">Endereços</a></li>
+                    <span>|</span>
+                    <li><a href="{% url 'conta' %}">Conta</a></li>
+                    <span>|</span>
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </h4>
+        <hr>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}" {% endif %}><i>{{ message }}</i></li>
+                {% endfor %}
+        </ul>
         {% endif %}
-    </section>
-    <h1><a href="{% url 'index' %}"> <img src="{%  static 'compras/LogoMerc4d0.png' %}" id="LogoMerc4d0"></a></h1>
-    <h4>
-        <nav id=navegacao-principal>
-            <ul>
-                {% if not user.is_authenticated %}
-                <li><a href="{% url 'login' %}">Login</a></li>
-                <span>|</span>
-                <li><a href="{% url 'registrar' %}">Registrar-se</a></li>
-                {% else %}
-                <li><a href="{% url 'index' %}">Suas listas</a></li>
-                <span>|</span>
-                <li><a href="{% url 'acompanhamentos' %}">Seus Acompanhamentos</a></li>
-                <span>|</span>
-                <li><a href="{% url 'pedidos' %}">Pedidos</a></li>
-                <span>|</span>
-                <li><a href="{% url 'carteira' %}">Carteira</a></li>
-                <span>|</span>
-                <li><a href="{% url 'enderecos' %}">Endereços</a></li>
-                <span>|</span>
-                <li><a href="{% url 'conta' %}">Conta</a></li>
-                <span>|</span>
-                <li><a href="{% url 'logout' %}">Logout</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-    </h4>
-    <hr>
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}><i>{{ message }}</i></li>
-            {% endfor %}
-    </ul>
-    {% endif %}
-    <br>
-    {% block body %}
-    {% endblock %}
+        <br>
+        {% block body %}
+        {% endblock %}
+    </main>
+    <footer class="text-center text-muted">
+        <hr>
+        Copyright &copy; 2020
+    </footer>
 </body>
-<br>
-<br>
-<footer class="text-center text-muted">
-    Copyright &copy; 2020
-</footer>
 
 </html>
