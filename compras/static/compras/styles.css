@@ -1,3 +1,14 @@
+:root {
+  --primary-color: #5c65cf;
+  --secondary-color: #d96fa0;
+  --primary-background: #fffaea;
+  --secondary-background: #f4a896;
+  --tertiary-background: #ffd494;
+  font-family: Montserrat, sans-serif;
+  font-size: 16px;
+  line-height: 1.5em;
+}
+
 body {
     padding: 20px;
     font-size: large;
@@ -16,21 +27,25 @@ input[type=number] {
 }
 
 a {
-  color: purple;
+  color: var(--primary-color);
+}
+
+img {
+  width: 25%;
 }
 
 a:hover {
-  color:rgb(177, 2, 177);
+  color: var(--secondary-color);
   text-decoration: none;
 }
 
 .btn-primary {
-  background-color: purple;
-  border: purple;
+  background-color: var(--primary-color);
+  border: var(--primary-color);
 }
 
 .btn-primary:hover{
-  background-color:rgb(177, 2, 177);;
+  background-color:var(--secondary-color);
 }
 
 body .form-control
