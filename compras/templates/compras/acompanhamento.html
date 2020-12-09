@@ -32,7 +32,7 @@
         </table>
         <br><br>
     {% else %}
-        <p>Acompanhamento vazio.</p>
+        <p>Despensa vazia.</p>
         <br>
     {% endif %}
     <form action="{% url 'acompanhamento' id %}" method="post">
@@ -44,6 +44,6 @@
     <form action="{% url 'acompanhamento' id %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="acompanhamento" value="excluir">
-        <input type="submit" class="btn btn-danger" value="Excluir acompanhamento">
+        <input type="submit" class="btn btn-danger" value="Excluir despensa">
     </form>
 {% endblock %}

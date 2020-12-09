@@ -13,7 +13,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-
+    
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 
@@ -35,9 +35,9 @@
     <main>
         <section>
             {% if user.is_authenticated %}
-            <p>Logado como <b>{{ user.username }}</b>.</p>
+            <p>Logado como <a id="username" href="{% url 'conta' %}">{{ user.username }}</a>.</p>
             {% else %}
-            <p>Não logado.</p>
+            <p style="color:transparent;">eduardo</p>
             {% endif %}
         </section>
         <h1><a href="{% url 'index' %}"> <img src="{%  static 'compras/LogoMerc4d0.png' %}" id="LogoMerc4d0"></a></h1>
@@ -49,19 +49,52 @@
                     <span>|</span>
                     <li><a href="{% url 'registrar' %}">Registrar-se</a></li>
                     {% else %}
-                    <li><a href="{% url 'index' %}">Suas listas</a></li>
+                    <li><a href="{% url 'index' %}">Minhas Listas</a></li>
                     <span>|</span>
-                    <li><a href="{% url 'acompanhamentos' %}">Seus Acompanhamentos</a></li>
+                    <li><a href="{% url 'acompanhamentos' %}">Minhas Despensas</a></li>
                     <span>|</span>
                     <li><a href="{% url 'pedidos' %}">Pedidos</a></li>
                     <span>|</span>
-                    <li><a href="{% url 'carteira' %}">Carteira</a></li>
+                    <!-- <li><a href="{% url 'conta' %}">Conta</a></li>
                     <span>|</span>
                     <li><a href="{% url 'enderecos' %}">Endereços</a></li>
                     <span>|</span>
-                    <li><a href="{% url 'conta' %}">Conta</a></li>
+                    <li><a href="{% url 'carteira' %}">Carteira</a></li>
                     <span>|</span>
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                    <li><a href="{% url 'logout' %}">Logout</a></li> -->
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">Perfil</a>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="{% url 'conta' %}">Conta</a></li>
+                          <li><a class="dropdown-item" href="{% url 'enderecos' %}">Endereços</a></li>
+                          <li><a class="dropdown-item" href="{% url 'carteira' %}">Carteiras</a></li>
+                          <li><hr class="dropdown-divider"></li>
+                          <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                          <a class="nav-link active" aria-current="page" href="#">Active</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Dropdown</a>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Separated link</a></li>
+                          </ul>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="#">Link</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                        </li>
+                      </ul> -->
                     {% endif %}
                 </ul>
             </nav>

@@ -2,7 +2,7 @@
 
 
 {% block body %}
-<h4>Seus Acompanhamentos:</h4>
+<h4>Minhas Despensas:</h4>
 <br>
 <ul>
 {% for acompanhamento in acompanhamentos %}
@@ -11,12 +11,12 @@
     {% endif %}
     <li><h4><a href="{% url 'acompanhamento' acompanhamento.id %}">{{ acompanhamento.nome }}</a></h4></li>
 {% empty %}
-    <p>Nenhum acompanhamento ainda.</p>
+    <p>Nenhuma despensa ainda.</p>
 {% endfor %}
 </ul>
 <br>
 <a href="{% url 'criar_acompanhamento'%}">
-<button type="button" class="btn btn-primary">Criar novo acompanhamento</button>
+<button type="button" class="btn btn-primary">Criar nova despensa</button>
 </a>
 
 {% endblock %}

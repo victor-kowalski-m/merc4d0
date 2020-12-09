@@ -37,8 +37,14 @@ section {
   text-align: left;
 }
 
-b {
-  color: var(--secondary-background);
+a#username {
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+a#username:hover {
+  color: var(--secondary-color);
+  text-decoration: none;
 }
 
 nav#navegacao-principal {
