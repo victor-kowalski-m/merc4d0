@@ -37,6 +37,11 @@ class AdicionarProduto(ModelForm):
         model = ProdutoLista
         fields = "__all__"
 
+class AdicionarProdutoAcompanhamento(ModelForm):
+    class Meta:
+        model = ProdutoAcompanhamento
+        fields = "__all__"
+
 class NovoCartao(ModelForm):
     class Meta:
         model = Cartao
@@ -170,20 +175,57 @@ def produtos(request):
                 messages.success(request, "Adicionado!")
 
             return HttpResponseRedirect(f"lista/{data['lista'].id}")
-            
-            '''
-            return render(request, "compras/produtos.html", {
-            "produtos": Produto.objects.all(),
-            "listas": Lista.objects.filter(usuario=request.user)
-            
-        })
-            '''
 
         else:
             messages.error(request, "Inválido")
             return render(request, "compras/produtos.html", {
             "produtos": Produto.objects.all(),
             "listas": Lista.objects.filter(usuario=request.user)
+        })
+
+
+@login_required(login_url='login')
+def produtos_acompanhamento(request):
+    if request.method == "GET":
+        params = request.GET
+        if 'acompanhamento' in params:
+            return render(request, "compras/produtos_acompanhamento.html", {
+            "produtos": Produto.objects.order_by('nome'),
+            "acompanhamentos": Acompanhamento.objects.filter(usuario=request.user).order_by('nome'),
+            'l': params['acompanhamento']
+        })
+        else:
+            return render(request, "compras/produtos_acompanhamento.html", {
+            "produtos": Produto.objects.order_by('nome'),
+            "acompanhamentos": Acompanhamento.objects.filter(usuario=request.user).order_by('nome')
+        })
+
+    else:
+        form = AdicionarProdutoAcompanhamento(request.POST)
+        
+        if form.is_valid():
+            
+            data = form.cleaned_data
+
+            if ProdutoAcompanhamento.objects.filter(acompanhamento=data['acompanhamento'], produto=data['produto']).exists():
+                p = ProdutoAcompanhamento.objects.get(
+                    produto=Produto.objects.get(pk=data['produto'].id),
+                    acompanhamento=Acompanhamento.objects.get(pk=data['acompanhamento'].id))
+                p.quantidade += int(data['quantidade'])
+                p.save() 
+                messages.success(request, "Aumentado!")
+
+            else:
+                form.save()
+                messages.success(request, "Adicionado!")
+
+            return HttpResponseRedirect(f"acompanhamento/{data['acompanhamento'].id}")
+            
+        else:
+            messages.error(request, "Inválido")
+            return render(request, "compras/produtos_acompanhamento.html", {
+            "produtos": Produto.objects.all(),
+            "acompanhamentos": Acompanhamento.objects.filter(usuario=request.user)
         })
 
 @login_required(login_url='login')
@@ -550,7 +592,7 @@ def acompanhamento(request, id):
     else:
         if 'acompanhamento' in request.POST:
             if request.POST["acompanhamento"] == "add":
-                return HttpResponseRedirect(f"/produtos?acompanhamento={id}")
+                return HttpResponseRedirect(f"/produtos_acompanhamento?acompanhamento={id}")
             elif request.POST["acompanhamento"] == "excluir":
                 Acompanhamento.objects.get(pk=id).delete()
                 messages.success(request, "Acompanhamento excluída.")

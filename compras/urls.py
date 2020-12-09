@@ -11,6 +11,7 @@ urlpatterns = [
     path("conta", views.conta, name="conta"),
     path("supermercados", views.supermercados, name="supermercados"),
     path("produtos", views.produtos, name="produtos"),
+    path("produtos_acompanhamento", views.produtos_acompanhamento, name="produtos_acompanhamento"),
     path("lista/<int:id>", views.lista, name="lista"),
     path("pedidos", views.pedidos, name="pedidos"),
     path("criar", views.criar, name="criar"),
