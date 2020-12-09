@@ -407,21 +407,27 @@ def pedido(request):
 
             for produto in ProdutoLista.objects.filter(lista=data['lista']):
                 quantidade = produto.quantidade
-                if produto.produto in produto_despensa:
-                    #quant_despensa = itens_despensa.get()
-                    pass
+                if produto.produto.id in produto_despensa:
+                    quant_despensa = itens_despensa.get(produto=produto.produto).quantidade
+                    if quantidade > quant_despensa:
+                        quantidade = quantidade - quant_despensa
+                    else:
+                        quantidade = 0
+
                 preco = float(SupermercadoProduto.objects.get(
                     produto=produto.produto, 
                     supermercado=data['supermercado']
                     ).preco)
 
-                item = {
-                    'quantidade': quantidade, 
-                    'produto': produto.produto.nome,
-                    'preco': preco
-                    }
+                if quantidade != 0:
+                    item = {
+                        'quantidade': quantidade, 
+                        'produto': produto.produto.nome,
+                        'preco': preco,
+                        'id': produto.produto.id
+                        }
 
-                itens.append(item)
+                    itens.append(item)
 
                 total += quantidade * preco
 
@@ -439,7 +445,7 @@ def pedido(request):
                 'supermercado': data['supermercado'],
                 'lista': data['lista'],
                 'acompanhamento': data['acompanhamento'],
-                'endereco': data['endereco']
+                'endereco': data['endereco'],
             })
 
         else:
@@ -487,6 +493,23 @@ def concluir(request):
                         )
                     ph.save()
 
+                    if ProdutoAcompanhamento.objects.filter(
+                        acompanhamento=Acompanhamento.objects.get(nome=request.session['pedido_acompanhamento']),
+                        produto=produto['id']).exists():
+
+                        p = ProdutoAcompanhamento.objects.get(
+                            produto=Produto.objects.get(pk=produto['id']),
+                            acompanhamento=Acompanhamento.objects.get(pk=Acompanhamento.objects.get(nome=request.session['pedido_acompanhamento']).id))
+                        p.quantidade += int(produto['quantidade'])
+                        p.save() 
+
+                    else:
+                        p = ProdutoAcompanhamento(
+                            produto=Produto.objects.get(pk=produto['id']),
+                            acompanhamento=Acompanhamento.objects.get(pk=Acompanhamento.objects.get(nome=request.session['pedido_acompanhamento']).id),
+                            quantidade=produto['quantidade'])
+                        p.save()
+                
                 messages.success(request, "Pedido feito!")
                 return HttpResponseRedirect(reverse('pedidos'))
 
