@@ -1,1 +1,9 @@
 __pycache__/
+
+compras/__pycache__/
+
+merc4d0/__pycache__/
+
+compras/migrations/__pycache__/
+
+.pyc
