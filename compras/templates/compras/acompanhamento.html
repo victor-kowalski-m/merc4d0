@@ -39,14 +39,11 @@
         {% csrf_token %}
         <input type="hidden" name="acompanhamento" value="add">
         <input type="submit" class="btn btn-primary" value="Adicionar Produtos">
-        <a href="{% url 'pedido' %}?acompanhamento={{id}}">
-            <button type="button" class="btn btn-primary">Pedir lista</button>
-        </a>
     </form>
     <br>
     <form action="{% url 'acompanhamento' id %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="acompanhamento" value="excluir">
-        <input type="submit" class="btn btn-danger" value="Excluir lista">
+        <input type="submit" class="btn btn-danger" value="Excluir acompanhamento">
     </form>
 {% endblock %}

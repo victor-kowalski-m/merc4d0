@@ -553,8 +553,8 @@ def acompanhamento(request, id):
                 return HttpResponseRedirect(f"/produtos?acompanhamento={id}")
             elif request.POST["acompanhamento"] == "excluir":
                 Acompanhamento.objects.get(pk=id).delete()
-                messages.success(request, "Lista excluída.")
-                return HttpResponseRedirect(reverse('index'))
+                messages.success(request, "Acompanhamento excluída.")
+                return HttpResponseRedirect(reverse('acompanhamentos'))
             else:
                 messages.error(request, "Dados inválidos")
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
