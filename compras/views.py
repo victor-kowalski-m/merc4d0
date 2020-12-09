@@ -329,7 +329,7 @@ def criar_acompanhamento(request):
             instance = form.save(commit=False)
             instance.usuario = request.user
             instance.save()
-            messages.success(request, 'Acompanhamento criado!')
+            messages.success(request, 'Despensa criada!')
             return HttpResponseRedirect(reverse("acompanhamentos")) 
 
         else:
@@ -595,7 +595,7 @@ def acompanhamento(request, id):
                 return HttpResponseRedirect(f"/produtos_acompanhamento?acompanhamento={id}")
             elif request.POST["acompanhamento"] == "excluir":
                 Acompanhamento.objects.get(pk=id).delete()
-                messages.success(request, "Acompanhamento excluída.")
+                messages.success(request, "Despensa excluída.")
                 return HttpResponseRedirect(reverse('acompanhamentos'))
             else:
                 messages.error(request, "Dados inválidos")
