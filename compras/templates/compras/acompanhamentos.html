@@ -1,0 +1,22 @@
+{% extends "compras/layout.html" %}
+
+
+{% block body %}
+<h4>Seus Acompanhamentos:</h4>
+<br>
+<ul>
+{% for acompanhamento in acompanhamentos %}
+    {% if forloop.counter0 > 0 %}
+    <hr>
+    {% endif %}
+    <li><h4><a href="{% url 'acompanhamento' acompanhamento.id %}">{{ acompanhamento.nome }}</a></h4></li>
+{% empty %}
+    <p>Nenhum acompanhamento ainda.</p>
+{% endfor %}
+</ul>
+<br>
+<a href="{% url 'criar_acompanhamento'%}">
+<button type="button" class="btn btn-primary">Criar novo acompanhamento</button>
+</a>
+
+{% endblock %}

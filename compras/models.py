@@ -55,7 +55,14 @@ class Lista(models.Model):
     usuario = models.ForeignKey(Usuario, 
                                 on_delete=models.CASCADE, 
                                 related_name="listas")
+    def __str__(self):
+        return f"{self.nome}"
 
+class Acompanhamento(models.Model):
+    nome = models.CharField(max_length=50)
+    usuario = models.ForeignKey(Usuario, 
+                                on_delete=models.CASCADE, 
+                                related_name="acompanhamentos")
     def __str__(self):
         return f"{self.nome}"
 
@@ -71,14 +78,17 @@ class ProdutoLista(models.Model):
     def __str__(self):
         return f"{self.quantidade} {self.produto} em {self.lista}"
 
-# class Acompanhamento(models.Model):
-#     produto = models.ForeignKey(Produto, 
-#                                 on_delete=models.CASCADE, 
-#                                 related_name="listas")
-#     quantidade = models.PositiveIntegerField()
+class ProdutoAcompanhamento(models.Model):
+    produto = models.ForeignKey(Produto, 
+                                on_delete=models.CASCADE, 
+                                related_name="acompanhamentos")
+    acompanhamento = models.ForeignKey(Acompanhamento, 
+                                on_delete=models.CASCADE, 
+                                related_name="produtos")
+    quantidade = models.PositiveIntegerField()
 
-#     def __str__(self):
-#         return f"{self.quantidade} {self.produto} consumidos"
+    def __str__(self):
+        return f"{self.quantidade} {self.produto} em {self.acompanhamento}"
 
 class Supermercado(models.Model):
     nome = models.CharField(max_length=50)

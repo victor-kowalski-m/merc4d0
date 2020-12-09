@@ -14,6 +14,7 @@ urlpatterns = [
     path("lista/<int:id>", views.lista, name="lista"),
     path("pedidos", views.pedidos, name="pedidos"),
     path("criar", views.criar, name="criar"),
+    path("criar_acompanhamento", views.criar_acompanhamento, name="criar_acompanhamento"),
     path("cartao", views.cartao, name="cartao"),
     path("pedido", views.pedido, name="pedido"),
     path("historico", views.historico, name="historico"),
@@ -22,5 +23,6 @@ urlpatterns = [
     path("endereco", views.endereco, name="endereco"),
     path("senha", views.senha, name="senha"),
     path("check_user", views.check_user, name="check_user"),
-    path("acompanhamento", views.acompanhamento, name="acompanhamento"),
+    path('acompanhamentos', views.acompanhamentos, name="acompanhamentos"),
+    path("acompanhamento/<int:id>", views.acompanhamento, name="acompanhamento"),
 ]

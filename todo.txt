@@ -1,4 +1,1 @@
--CSS botões bootstrap
 -Formatar inputs (CPF, cartão)
--Mudar model Historico para FKs. Guardar preço de cada produto (pode mudar)
--Tentar hackear

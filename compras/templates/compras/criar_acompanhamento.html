@@ -1,0 +1,13 @@
+{% extends "compras/layout.html" %}
+
+{% block body %}
+<h4>Novo Acompanhamento:</h4>
+    <br>
+    <form action="{% url 'criar_acompanhamento' %}" method="post" autocomplete="off">
+        {% csrf_token %}
+        <div class="form-group">
+        <input  autofocus class="form-control" type="text" required name="nome" placeholder="Nome">
+        </div>
+        <input class="btn btn-primary" type="submit" value="Criar">
+    </form>
+{% endblock %}

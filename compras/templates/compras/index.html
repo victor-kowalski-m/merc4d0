@@ -11,7 +11,7 @@
     {% endif %}
     <li><h4><a href="{% url 'lista' lista.id %}">{{ lista.nome }}</a></h4></li>
 {% empty %}
-    <p style="text-indent: -2.5em;">Nenhuma lista ainda.</p>
+    <p>Nenhuma lista ainda.</p>
 {% endfor %}
 </ul>
 <br>
