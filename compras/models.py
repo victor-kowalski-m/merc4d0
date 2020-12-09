@@ -71,6 +71,15 @@ class ProdutoLista(models.Model):
     def __str__(self):
         return f"{self.quantidade} {self.produto} em {self.lista}"
 
+# class Acompanhamento(models.Model):
+#     produto = models.ForeignKey(Produto, 
+#                                 on_delete=models.CASCADE, 
+#                                 related_name="listas")
+#     quantidade = models.PositiveIntegerField()
+
+#     def __str__(self):
+#         return f"{self.quantidade} {self.produto} consumidos"
+
 class Supermercado(models.Model):
     nome = models.CharField(max_length=50)
     unidade = models.CharField(max_length=50)

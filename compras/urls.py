@@ -22,4 +22,5 @@ urlpatterns = [
     path("endereco", views.endereco, name="endereco"),
     path("senha", views.senha, name="senha"),
     path("check_user", views.check_user, name="check_user"),
+    path("acompanhamento", views.acompanhamento, name="acompanhamento"),
 ]

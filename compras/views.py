@@ -42,6 +42,11 @@ class NovoEndereco(ModelForm):
         model = Endereco
         fields = ['cep','rua', 'numero', 'bairro', 'estado', 'cidade', 'complemento']
 
+class AdicionarAcompanhamento(ModelForm):
+    class Meta:
+        model = ProdutoLista
+        fields = "__all__"
+
 @login_required(login_url='login')
 def index(request):
     return render(request, "compras/index.html", {
@@ -493,3 +498,49 @@ def senha(request):
 def check_user(request):
     username = request.GET.get('u', '')
     return JsonResponse(Usuario.objects.filter(username=username).count(), safe=False)
+
+
+
+@login_required(login_url='login')
+def acompanhamento(request):
+    if request.method == "GET":
+        params = request.GET
+        if 'lista' in params:
+            return render(request, "compras/acompanhamento.html", {
+            "produtos": Produto.objects.order_by('nome'),
+            "listas": Lista.objects.filter(usuario=request.user).order_by('nome'),
+            'l': params['lista']
+        })
+        else:
+            return render(request, "compras/acompanhamento.html", {
+            "produtos": Produto.objects.order_by('nome'),
+            "listas": Lista.objects.filter(usuario=request.user).order_by('nome')
+        })
+
+    else:
+        form = AdicionarAcompanhamento(request.POST)
+        
+        if form.is_valid():
+            
+            data = form.cleaned_data
+
+            if ProdutoLista.objects.filter(lista=data['lista'], produto=data['produto']).exists():
+                p = ProdutoLista.objects.get(
+                    produto=Produto.objects.get(pk=data['produto'].id),
+                    lista=Lista.objects.get(pk=data['lista'].id))
+                p.quantidade += int(data['quantidade'])
+                p.save() 
+                messages.success(request, "Aumentado!")
+
+            else:
+                form.save()
+                messages.success(request, "Adicionado!")
+
+            return HttpResponseRedirect(f"lista/{data['lista'].id}")
+
+        else:
+            messages.error(request, "Inválido")
+            return render(request, "compras/acompanhamento.html", {
+            "produtos": Produto.objects.all(),
+            "listas": Lista.objects.filter(usuario=request.user)
+        })
