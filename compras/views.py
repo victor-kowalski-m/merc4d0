@@ -62,8 +62,8 @@ class AdicionarAcompanhamento(ModelForm):
 @login_required(login_url='login')
 def index(request):
     return render(request, "compras/index.html", {
-        "listas": Lista.objects.filter(usuario=request.user).order_by('nome')
-
+        "listas": Lista.objects.filter(usuario=request.user).order_by('nome'),
+        "produtos": Produto.objects.order_by('nome'),
     })
 
 
@@ -672,3 +672,24 @@ def excluir(request):
         return JsonResponse("Produto não existe.", safe=False)
     p.delete()
     return JsonResponse("Produto excluído!", safe=False)
+
+def add(request):
+    id_produto = request.GET.get('p', '')
+    id_lista = request.GET.get('l', '')
+    quantidade = request.GET.get('q', '')
+
+    if ProdutoLista.objects.filter(lista=id_lista, produto=id_produto).exists():
+        p = ProdutoLista.objects.get(
+            produto=Produto.objects.get(pk=id_produto),
+            lista=Lista.objects.get(pk=id_lista))
+        p.quantidade += int(quantidade)
+        p.save() 
+        return JsonResponse([p.id, p.produto.nome], safe=False)
+
+    else:
+        p = ProdutoLista(
+            produto=Produto.objects.get(pk=id_produto),
+            lista=Lista.objects.get(pk=id_lista),
+            quantidade=quantidade)
+        p.save()
+        return JsonResponse([p.id, p.produto.nome], safe=False)

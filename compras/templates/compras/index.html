@@ -11,10 +11,11 @@
     {% endif %}
     <li><h4><a href="{% url 'lista' lista.id %}">{{ lista.nome }}</a></h4></li>
     
-    <div id="p{{ lista.id }}" style="display: none;">
+    <!-- Div que mostra ou esconde o conteúdo da lista -->
+    <div id="l{{ lista.id }}" style="display: none;">
         <br>
         {% if lista.produtos.all %}
-            <table class="table">
+            <table id="t{{lista.id}}" class="table">
                 <thead class="thead-light">
                     <tr>
                         <th scope="col">Produto</th>
@@ -40,23 +41,51 @@
         {% else %}
             <p>Lista vazia.</p>
             <br>
+            <table id="t{{lista.id}}" class="table" style="display: none;">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Produto</th>
+                        <th scope="col">Quantidade</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <br><br>
+
         {% endif %}
-        <form action="{% url 'lista' lista.id %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="lista" value="add">
-            <input type="submit" class="btn btn-primary" value="Adicionar Produtos">
-            <a href="{% url 'pedido' %}?lista={{id}}">
-                <button type="button" class="btn btn-primary">Pedir lista</button>
-            </a>
-        </form>
-        <br>
-        <form action="{% url 'lista' lista.id %}" method="post">
+
+        <!-- Div que mostra ou esconde adicionar produtos -->
+        <div id="a{{ lista.id }}" style="display: none;">
+            <div class="form-group">
+                <select id="p{{ lista.id }}" class="selectpicker" data-live-search="true" title="Escolha o produto" required>
+                    {% for produto in produtos %}
+                    <option value="{{ produto.id }}">{{ produto.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="number" required class="form-control" min="1" id="q{{ lista.id }}" placeholder="Quantidade">
+            </div>
+            <button type="button" class="btn btn-primary" id="add{{ lista.id }}" onclick="adicionar('{{ lista.id }}')">Adicionar</button>
+            <br><br>
+        </div>
+        
+        <button type="button" class="btn btn-primary" onclick="mostrar_add('{{ lista.id }}')" id="ba{{lista.id}}">Mostrar adicionar</button>
+        <a href="{% url 'pedido' %}?lista={{lista.id}}">
+            <button type="button" class="btn btn-primary">Pedir lista</button>
+        </a>
+        <form style="padding-top: 5px;" action="{% url 'lista' lista.id %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="lista" value="excluir">
             <input type="submit" class="btn btn-danger" value="Excluir lista">
         </form>
         <br><br>
     </div>
+
+    
+
     <li><button type="button" class="btn btn-primary" id="b{{ lista.id }}" onclick="mostrar('{{ lista.id }}')">Mostrar</button></li>
     <br>
 {% empty %}
@@ -73,15 +102,15 @@
 <script>
  
     function mostrar (id) {
-        const p = document.querySelector(`#p${id}`)
+        const l = document.querySelector(`#l${id}`)
         const b = document.querySelector(`#b${id}`)
 
         if (b.innerHTML === "Mostrar"){
-            p.style.display = 'block'
+            l.style.display = 'block'
             b.innerHTML = "Esconder"
         } 
         else if (b.innerHTML === "Esconder") {
-            p.style.display = 'none'
+            l.style.display = 'none'
             b.innerHTML = "Mostrar"
         }
     }
@@ -93,14 +122,85 @@
         $.get('/excluir?p=' + id_produto, (resposta) => {
             if (resposta = "Produto excluído!") {
                 row.remove()
-                console.log(body.children.length)
                 if (body.children.length === 0) {
-                    body.parentElement.parentElement.innerHTML = "<br>Lista vazia!<br><br>"
+                    body.parentElement.style.display = "none"
+
+                    let vazia = document.createElement("P")
+                    vazia.innerHTML = "Lista Vazia!"
+
+                    body.parentElement.parentElement.prepend(vazia)
                 }
 
             } else {
                 alert(resposta)
             }   
+        })
+    }
+
+    function mostrar_add (id) {
+        const a = document.querySelector(`#a${id}`)
+        const ba = document.querySelector(`#ba${id}`)
+
+        if (ba.innerHTML === "Mostrar adicionar"){
+            a.style.display = 'block'
+            ba.innerHTML = "Esconder adicionar"
+        } 
+        else if (ba.innerHTML === "Esconder adicionar") {
+            a.style.display = 'none'
+            ba.innerHTML = "Mostrar adicionar"
+        }
+    }
+
+    function adicionar (id_lista) {
+        const id_produto = document.querySelector(`#p${id_lista}`)
+        const quantidade = document.querySelector(`#q${id_lista}`).value
+        const table = document.querySelector(`#t${id_lista}`)
+        let ja_tem = false;
+
+        $.get(`/add?p=${id_produto.value}&l=${id_lista}&q=${quantidade}`, (resposta) => {
+            if (table.style.display === "none"){
+                table.style.display = "block"
+            }
+
+            Array.from(document.querySelector(`#t${id_lista}`).children[1].children).forEach((tr) => {
+                if (resposta[1] === tr.children[0].innerHTML) {
+                    let quant = parseInt(tr.children[1].innerHTML) + parseInt(quantidade)
+                    tr.children[1].innerHTML = `${quant}`
+                    ja_tem = true;
+                }
+            })
+
+            if (!ja_tem) {
+                let tr = document.createElement("TR");
+                tr.setAttribute("id", `#r${resposta[0]}`)
+
+                let tdp = document.createElement("TD");
+                tdp.innerHTML = resposta[1]
+
+                let tdq = document.createElement("TD");
+                tdq.innerHTML = quantidade
+
+                let tdex = document.createElement("TD");
+
+                let exbutton = document.createElement("BUTTON");
+                exbutton.setAttribute("class", "close")
+                exbutton.setAttribute("aria-label", "Close")
+                exbutton.setAttribute("onclick", `excluir('${resposta[0]}')`)
+
+                let exbutspan = document.createElement("SPAN");
+                exbutspan.setAttribute("aria-hidden", "true")
+                exbutspan.innerHTML = "&times;"
+
+                exbutton.appendChild(exbutspan)
+
+                tdex.appendChild(exbutton)
+
+                tr.appendChild(tdp)
+                tr.appendChild(tdq)
+                tr.appendChild(tdex)
+
+                table.children[1].appendChild(tr);
+            } 
         })
     }
 
