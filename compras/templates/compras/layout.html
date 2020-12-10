@@ -55,53 +55,16 @@
                     <span>|</span>
                     <li><a href="{% url 'pedidos' %}">Pedidos</a></li>
                     <span>|</span>
-                    <!-- <li><a href="{% url 'conta' %}">Conta</a></li>
-                    <span>|</span>
-                    <li><a href="{% url 'enderecos' %}">Endereços</a></li>
-                    <span>|</span>
-                    <li><a href="{% url 'carteira' %}">Carteira</a></li>
-                    <span>|</span>
-                    <li><a href="{% url 'logout' %}">Logout</a></li> -->
-                    <!-- <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
-                        <span class="caret"></span></button>
-                        <ul class="dropdown-menu">
-                          <li><a href="#">HTML</a></li>
-                          <li><a href="#">CSS</a></li>
-                          <li><a href="#">JavaScript</a></li>
-                        </ul>
-                      </div> -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Perfil</a>
                         <ul class="dropdown-menu">
                           <li><a class="dropdown-item" href="{% url 'conta' %}" style="color: #5c65cf; font-weight: bold;">Conta</a></li>
                           <li><a class="dropdown-item" href="{% url 'enderecos' %}" style="color: #5c65cf; font-weight: bold;">Endereços</a></li>
-                          <li><a class="dropdown-item" href="{% url 'carteira' %}" style="color: #5c65cf; font-weight: bold;">Carteiras</a></li>
+                          <li><a class="dropdown-item" href="{% url 'carteira' %}" style="color: #5c65cf; font-weight: bold;">Cartões</a></li>
                           <li><a class="dropdown-item" href="{% url 'logout' %}" style="color: #d96fa0; font-weight: bold;">Logout</a></li>
                         </ul>
                     </li>
 
-                    <!-- <ul class="nav nav-tabs">
-                        <li class="nav-item">
-                          <a class="nav-link active" aria-current="page" href="#">Active</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Dropdown</a>
-                          <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Separated link</a></li>
-                          </ul>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                        </li>
-                      </ul> -->
                     {% endif %}
                 </ul>
             </nav>
