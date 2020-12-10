@@ -26,4 +26,5 @@ urlpatterns = [
     path("check_user", views.check_user, name="check_user"),
     path('acompanhamentos', views.acompanhamentos, name="acompanhamentos"),
     path("acompanhamento/<int:id>", views.acompanhamento, name="acompanhamento"),
+    path("excluir", views.excluir, name="excluir"),
 ]

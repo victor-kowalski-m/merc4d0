@@ -662,3 +662,13 @@ def acompanhamento(request, id):
             p.delete()
             messages.success(request, "Produto excluído.")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def excluir(request):
+    prod_lista = request.GET.get('p', '')
+
+    try:
+        p = ProdutoLista.objects.get(pk=prod_lista)
+    except ProdutoLista.DoesNotExist:
+        return JsonResponse("Produto não existe.", safe=False)
+    p.delete()
+    return JsonResponse("Produto excluído!", safe=False)
