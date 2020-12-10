@@ -673,6 +673,32 @@ def excluir(request):
     p.delete()
     return JsonResponse("Produto excluído!", safe=False)
 
+def aumentar(request):
+    prod_lista = request.GET.get('p', '')
+
+    try:
+        p = ProdutoLista.objects.get(pk=prod_lista)
+    except ProdutoLista.DoesNotExist:
+        return JsonResponse("Produto não existe.", safe=False)
+    p.quantidade += 1
+    p.save()
+    return JsonResponse("Aumentado", safe=False)
+
+def diminuir(request):
+    prod_lista = request.GET.get('p', '')
+
+    try:
+        p = ProdutoLista.objects.get(pk=prod_lista)
+    except ProdutoLista.DoesNotExist:
+        return JsonResponse("Produto não existe.", safe=False)
+    if p.quantidade == 1:
+        p.delete()
+    else:
+        p.quantidade -= 1
+        p.save()
+    return JsonResponse("Diminuido", safe=False)
+
+
 def add(request):
     id_produto = request.GET.get('p', '')
     id_lista = request.GET.get('l', '')

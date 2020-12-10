@@ -28,4 +28,6 @@ urlpatterns = [
     path("acompanhamento/<int:id>", views.acompanhamento, name="acompanhamento"),
     path("excluir", views.excluir, name="excluir"),
     path("add", views.add, name="add"),
+    path("aumentar", views.aumentar, name="aumentar"),
+    path("diminuir", views.diminuir, name="diminuir"),
 ]

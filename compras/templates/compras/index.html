@@ -21,6 +21,7 @@
                         <th scope="col">Produto</th>
                         <th scope="col">Quantidade</th>
                         <th scope="col"></th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,6 +29,14 @@
                         <tr id="r{{ produto.id }}">
                             <td>{{ produto.produto.nome }}</td>
                             <td>{{ produto.quantidade }}</td>
+                            <td>
+                                <button class="close" aria-label="Close" onclick="aumentar(this.parentElement.parentElement, '{{ lista.id }}')">
+                                    <span aria-hidden="true">&plus;</span>
+                                </button>
+                                <button class="close" aria-label="Close" onclick="diminuir(this.parentElement.parentElement, '{{ lista.id }}')">
+                                    <span aria-hidden="true">&minus;</span>
+                                </button>
+                            </td>
                             <td>
                                     <button class="close" aria-label="Close" onclick="excluir(this.parentElement.parentElement, '{{ lista.id }}')">
                                         <span aria-hidden="true">&times;</span>
@@ -50,6 +59,7 @@
                     <tr>
                         <th scope="col">Produto</th>
                         <th scope="col">Quantidade</th>
+                        <th scope="col"></th>
                         <th scope="col"></th>
                     </tr>
                 </thead>
@@ -145,6 +155,47 @@
         })
     }
 
+    function aumentar(produto, id_lista){
+        row = produto
+        const body = row.parentElement
+
+        $.get('/aumentar?p=' + produto.id.substring(1), (resposta) => {
+            if (resposta = "Aumentado") {
+                row.children[1].innerHTML = `${parseInt(row.children[1].innerHTML) + 1}`
+            } else {
+                alert(resposta)
+            }   
+        })
+    }
+
+    function diminuir(produto, id_lista){
+        row = produto
+        const body = row.parentElement
+
+        $.get('/diminuir?p=' + produto.id.substring(1), (resposta) => {
+            if (resposta = "Diminuido") {
+                if (parseInt(row.children[1].innerHTML) !== 1) {
+                    row.children[1].innerHTML = `${parseInt(row.children[1].innerHTML) - 1}`
+                } else {
+                    row.remove()
+                    if (body.children.length === 0) {
+                    body.parentElement.style.display = "none"
+
+                    let vazia = document.createElement("P")
+                    vazia.setAttribute("class",`v${id_lista}`)
+                    vazia.innerHTML = "<br>Lista Vazia."
+
+                    document.querySelector(`.br${id_lista}`).style.display = "none"
+
+                    body.parentElement.parentElement.prepend(vazia)
+                    }
+                }
+            } else {
+                alert(resposta)
+            }   
+        })
+    }
+
     function mostrar_add (id) {
         const a = document.querySelector(`#a${id}`)
         const ba = document.querySelector(`#ba${id}`)
@@ -166,9 +217,6 @@
         let ja_tem = false;
 
         $.get(`/add?p=${produto.value}&l=${id_lista}&q=${quantidade.value}`, (resposta) => {
-            
-            produto.selectedIndex = null;
-            quantidade.value = ""
 
             if (document.querySelector(`.v${id_lista}`)){
                 document.querySelector(`.v${id_lista}`).remove()
@@ -196,6 +244,34 @@
                 let tdq = document.createElement("TD");
                 tdq.innerHTML = quantidade.value
 
+                let tdmudar = document.createElement("TD");
+
+                let aumbutton = document.createElement("BUTTON");
+                aumbutton.setAttribute("class", "close")
+                aumbutton.setAttribute("aria-label", "Close")
+                aumbutton.setAttribute("onclick", `aumentar(this.parentElement.parentElement,'${id_lista}')`)
+
+                let aumbutspan = document.createElement("SPAN");
+                aumbutspan.setAttribute("aria-hidden", "true")
+                aumbutspan.innerHTML = "&plus;"
+
+                aumbutton.appendChild(aumbutspan)
+
+                tdmudar.appendChild(aumbutton)
+
+                let dimbutton = document.createElement("BUTTON");
+                dimbutton.setAttribute("class", "close")
+                dimbutton.setAttribute("aria-label", "Close")
+                dimbutton.setAttribute("onclick", `diminuir(this.parentElement.parentElement,'${id_lista}')`)
+
+                let dimbutspan = document.createElement("SPAN");
+                dimbutspan.setAttribute("aria-hidden", "true")
+                dimbutspan.innerHTML = "&minus;"
+
+                dimbutton.appendChild(dimbutspan)
+
+                tdmudar.appendChild(dimbutton)
+
                 let tdex = document.createElement("TD");
 
                 let exbutton = document.createElement("BUTTON");
@@ -213,9 +289,12 @@
 
                 tr.appendChild(tdp)
                 tr.appendChild(tdq)
+                tr.appendChild(tdmudar)
                 tr.appendChild(tdex)
 
                 table.children[1].appendChild(tr);
+
+                quantidade.value = ""
             } 
         })
     }
