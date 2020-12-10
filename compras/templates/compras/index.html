@@ -92,9 +92,18 @@
 {% endfor %}
 </ul>
 <br>
-<a href="{% url 'criar'%}">
-<button type="button" class="btn btn-primary">Criar nova lista</button>
-</a>
+<button type="button" onclick="document.querySelector('#criar').style.display = 'block'; this.style.display = 'none'" class="btn btn-primary">Criar nova lista</button>
+<div id="criar" style="display: none;">
+    <h4>Nova Lista:</h4>
+    <br>
+    <form action="{% url 'criar' %}" method="post" autocomplete="off">
+        {% csrf_token %}
+        <div class="form-group">
+        <input  autofocus class="form-control" type="text" required name="nome" placeholder="Nome">
+        </div>
+        <input class="btn btn-primary" type="submit" value="Criar">
+    </form>
+</div>
 {% endblock %}
 
 {% block script %}
