@@ -12,13 +12,13 @@
 body {
   padding: 10px;
   font-size: large;
-  height: 100vh;
+  height: 100%;
   min-height: 500px;
   /* min-width: 1000px; */
 }
 
 main {
-  height: 92%;
+  min-height: 90vh;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -45,6 +45,11 @@ a#username {
 a#username:hover {
   color: var(--secondary-color);
   text-decoration: none;
+}
+
+ul#dropmer {
+  color: var(--primary-color);
+  font-weight: bold;
 }
 
 nav#navegacao-principal {
@@ -127,5 +132,7 @@ ul {
 }
 
 footer {
-  height: 8%;
+  clear: both;
+  position: relative;
+  height: 50px;
 }

@@ -12,6 +12,7 @@ from django.forms import ModelForm
 from django.http import JsonResponse
 from .models import *
 
+
 class FazerPedido(ModelForm):
     class Meta:
         model = Pedido
@@ -57,6 +58,7 @@ class AdicionarAcompanhamento(ModelForm):
         model = ProdutoLista
         fields = "__all__"
 
+
 @login_required(login_url='login')
 def index(request):
     return render(request, "compras/index.html", {
@@ -64,12 +66,14 @@ def index(request):
 
     })
 
+
 @login_required(login_url='login')
 def acompanhamentos(request):
     return render(request, "compras/acompanhamentos.html", {
         "acompanhamentos": Acompanhamento.objects.filter(usuario=request.user).order_by('nome')
 
     })
+
 
 def login_view(request):
     if request.method == "POST":
@@ -90,11 +94,13 @@ def login_view(request):
     else:
         return render(request, "compras/login.html")
 
+
 @login_required(login_url='login')
 def logout_view(request):
     logout(request)
     messages.success(request, 'Até logo.')
     return HttpResponseRedirect(reverse("index"))
+
 
 def registrar(request):
     if request.method == "POST":
@@ -138,6 +144,7 @@ def registrar(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "compras/registrar.html")
+
 
 @login_required(login_url='login')
 def produtos(request):
@@ -228,6 +235,7 @@ def produtos_acompanhamento(request):
             "acompanhamentos": Acompanhamento.objects.filter(usuario=request.user)
         })
 
+
 @login_required(login_url='login')
 def supermercados(request):
     return HttpResponse('<h1> Em construção...</h1>')
@@ -265,6 +273,7 @@ def lista(request, id):
             messages.success(request, "Produto excluído.")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 @login_required(login_url='login')
 def carteira(request):
     if request.method == "GET":
@@ -280,11 +289,13 @@ def carteira(request):
         p.delete()
         messages.success(request, "Cartão excluído.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        
+
+
 @login_required(login_url='login')
 def conta(request):
     return render(request, 'compras/conta.html')
     #return HttpResponse('<h1> Em construção...</h1>')
+
 
 @login_required(login_url='login')
 def criar(request):
@@ -311,6 +322,7 @@ def criar(request):
             messages.error(request, 'Dados inválidos.')
             return render(request, "compras/criar.html")
 
+
 @login_required(login_url='login')
 def criar_acompanhamento(request):
     if request.method == "GET":
@@ -335,6 +347,7 @@ def criar_acompanhamento(request):
         else:
             messages.error(request, 'Dados inválidos.')
             return render(request, "compras/criar_acompanhamento.html")
+
 
 @login_required(login_url='login')
 def cartao(request):
@@ -376,9 +389,11 @@ def cartao(request):
             messages.error(request, 'Dados inválidos.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 @login_required(login_url='login')
 def pedidos(request):
     return render(request, "compras/pedidos.html")
+
 
 @login_required(login_url='login')
 def pedido(request):
@@ -521,9 +536,9 @@ def concluir(request):
             messages.error(request, "Dados inválidos")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-
     else: 
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 @login_required(login_url='login')
 def historico(request):
@@ -533,6 +548,7 @@ def historico(request):
         })
     else:
         return render(request, "compras/historico.html")
+
 
 @login_required(login_url='login')
 def enderecos(request):
@@ -551,7 +567,8 @@ def enderecos(request):
         e.delete()
         messages.success(request, "Endereço excluído.")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    
+
+
 @login_required(login_url='login')
 def endereco(request):
     if request.method == "GET":
@@ -587,6 +604,7 @@ def endereco(request):
             messages.error(request, 'Dados inválidos.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 @login_required(login_url='login')
 def senha(request):
     if request.method == "GET":
@@ -611,6 +629,7 @@ def senha(request):
 def check_user(request):
     username = request.GET.get('u', '')
     return JsonResponse(Usuario.objects.filter(username=username).count(), safe=False)
+
 
 @login_required(login_url='login')
 def acompanhamento(request, id):

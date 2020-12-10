@@ -62,15 +62,22 @@
                     <li><a href="{% url 'carteira' %}">Carteira</a></li>
                     <span>|</span>
                     <li><a href="{% url 'logout' %}">Logout</a></li> -->
-
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">Perfil</a>
+                    <!-- <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Dropdown Example
+                        <span class="caret"></span></button>
                         <ul class="dropdown-menu">
-                          <li><a class="dropdown-item" href="{% url 'conta' %}">Conta</a></li>
-                          <li><a class="dropdown-item" href="{% url 'enderecos' %}">Endereços</a></li>
-                          <li><a class="dropdown-item" href="{% url 'carteira' %}">Carteiras</a></li>
-                          <li><hr class="dropdown-divider"></li>
-                          <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                          <li><a href="#">HTML</a></li>
+                          <li><a href="#">CSS</a></li>
+                          <li><a href="#">JavaScript</a></li>
+                        </ul>
+                      </div> -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Perfil</a>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="{% url 'conta' %}" style="color: #5c65cf; font-weight: bold;">Conta</a></li>
+                          <li><a class="dropdown-item" href="{% url 'enderecos' %}" style="color: #5c65cf; font-weight: bold;">Endereços</a></li>
+                          <li><a class="dropdown-item" href="{% url 'carteira' %}" style="color: #5c65cf; font-weight: bold;">Carteiras</a></li>
+                          <li><a class="dropdown-item" href="{% url 'logout' %}" style="color: #d96fa0; font-weight: bold;">Logout</a></li>
                         </ul>
                     </li>
 
