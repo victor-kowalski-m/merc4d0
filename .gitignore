@@ -6,10 +6,12 @@ merc4d0/__pycache__/
 
 compras/migrations/__pycache__/
 
-.pyc
+*.pyc
 
-.sqlite3
+*.sqlite3
 
-.cpython-39
+db.sqlite3
 
-.cpython-39.pyc
+*.cpython-39
+
+*.cpython-39.pyc
