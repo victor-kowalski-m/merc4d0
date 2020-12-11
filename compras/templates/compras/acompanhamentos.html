@@ -1,22 +1,303 @@
 {% extends "compras/layout.html" %}
-
+{% load static %}
 
 {% block body %}
-<h4>Minhas Despensas:</h4>
+<h4>Minhas despensas:</h4>
 <br>
 <ul>
-{% for acompanhamento in acompanhamentos %}
+{% for lista in acompanhamentos %}
     {% if forloop.counter0 > 0 %}
     <hr>
     {% endif %}
-    <li><h4><a href="{% url 'acompanhamento' acompanhamento.id %}">{{ acompanhamento.nome }}</a></h4></li>
+    <li><h4><a href="" onclick="mostrar('{{ lista.id }}'); return false" >{{ lista.nome }}</a></h4></li>
+    
+    <!-- Div que mostra ou esconde o conteúdo da lista -->
+    <div id="l{{ lista.id }}" style="display: none;">
+        <br>
+        {% if lista.produtos.all %}
+            <table id="t{{lista.id}}" class="table">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Produto</th>
+                        <th scope="col">Quantidade</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for produto in lista.produtos.all %}
+                        <tr id="r{{ produto.id }}">
+                            <td>{{ produto.produto.nome }}</td>
+                            <td>{{ produto.quantidade }}</td>
+                            <td>
+                                <button class="close" aria-label="Close" onclick="aumentar(this.parentElement.parentElement, '{{ lista.id }}')">
+                                    <span aria-hidden="true">&plus;</span>
+                                </button>
+                                <button class="close" aria-label="Close" onclick="diminuir(this.parentElement.parentElement, '{{ lista.id }}')">
+                                    <span aria-hidden="true">&minus;</span>
+                                </button>
+                            </td>
+                            <td>
+                                    <button class="close" aria-label="Close" onclick="excluir(this.parentElement.parentElement, '{{ lista.id }}')">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="br{{lista.id}}">
+                <br>
+            </div>
+            
+        {% else %}
+        <div class="v{{ lista.id }}">
+            <p>Despensa vazia.</p>
+        </div>
+            <table id="t{{lista.id}}" class="table" style="display: none;">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Produto</th>
+                        <th scope="col">Quantidade</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="br{{lista.id}}">
+             <br>
+            </div>
+
+        {% endif %}
+
+        <!-- Div que mostra ou esconde adicionar produtos -->
+        <div id="a{{ lista.id }}">
+            <div class="form-group">
+                <select id="p{{ lista.id }}" class="selectpicker" data-live-search="true" title="Escolha o produto" required>
+                    {% for produto in produtos %}
+                    <option value="{{ produto.id }}">{{ produto.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="number" required class="form-control" min="1" id="q{{ lista.id }}" placeholder="Quantidade">
+            </div>
+            <button type="button" class="btn btn-primary" id="add{{ lista.id }}" onclick="adicionar('{{ lista.id }}')">Adicionar</button>
+            <br><br>
+        </div>
+        <a href="{% url 'pedido' %}?lista={{lista.id}}">
+            <button type="button" class="btn btn-primary">Pedir despensa</button>
+        </a>
+        <form style="padding-top: 5px;" action="{% url 'lista' lista.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="lista" value="excluir">
+            <input type="submit" class="btn btn-danger" value="Excluir despensa">
+        </form>
+        <br>
+    </div>
 {% empty %}
     <p>Nenhuma despensa ainda.</p>
 {% endfor %}
 </ul>
 <br>
-<a href="{% url 'criar_acompanhamento'%}">
-<button type="button" class="btn btn-primary">Criar nova despensa</button>
-</a>
+<button type="button" onclick="document.querySelector('#criar').style.display = 'block'; this.style.display = 'none'" class="btn btn-primary">Criar nova despensa</button>
+<div id="criar" style="display: none;">
+    <h4>Nova Despensa:</h4>
+    <br>
+    <form action="{% url 'criar' %}" method="post" autocomplete="off">
+        {% csrf_token %}
+        <div class="form-group">
+        <input  autofocus class="form-control" type="text" required name="nome" placeholder="Nome">
+        </div>
+        <input class="btn btn-primary" type="submit" value="Criar">
+    </form>
+</div>
+{% endblock %}
 
+{% block script %}
+<script>
+ 
+    function mostrar (id) {
+        const l = document.querySelector(`#l${id}`)
+
+        if (l.style.display === 'none'){
+            l.style.display = 'block'
+        } 
+        else if (l.style.display === 'block') {
+            l.style.display = 'none'
+        }
+    }
+
+    function excluir(produto, id_lista){
+        row = produto
+        const body = row.parentElement
+
+        $.get('/excluir?p=' + produto.id.substring(1) +'&d=true' , (resposta) => {
+            if (resposta = "Produto excluído!") {
+                row.remove()
+                if (body.children.length === 0) {
+                    body.parentElement.style.display = "none"
+
+                    let vazia = document.createElement("P")
+                    vazia.setAttribute("class",`v${id_lista}`)
+                    vazia.innerHTML = "<br>Despensa Vazia."
+
+                    document.querySelector(`.br${id_lista}`).style.display = "none"
+
+                    body.parentElement.parentElement.prepend(vazia)
+                }
+
+            } else {
+                alert(resposta)
+            }   
+        })
+    }
+
+    function aumentar(produto, id_lista){
+        row = produto
+        const body = row.parentElement
+
+        $.get('/aumentar?p=' + produto.id.substring(1) +'&d=true', (resposta) => {
+            if (resposta = "Aumentado") {
+                row.children[1].innerHTML = `${parseInt(row.children[1].innerHTML) + 1}`
+            } else {
+                alert(resposta)
+            }   
+        })
+    }
+
+    function diminuir(produto, id_lista){
+        row = produto
+        const body = row.parentElement
+
+        $.get('/diminuir?p=' + produto.id.substring(1) +'&d=true', (resposta) => {
+            if (resposta = "Diminuido") {
+                if (parseInt(row.children[1].innerHTML) !== 1) {
+                    row.children[1].innerHTML = `${parseInt(row.children[1].innerHTML) - 1}`
+                } else {
+                    row.remove()
+                    if (body.children.length === 0) {
+                    body.parentElement.style.display = "none"
+
+                    let vazia = document.createElement("P")
+                    vazia.setAttribute("class",`v${id_lista}`)
+                    vazia.innerHTML = "<br>Despensa Vazia."
+
+                    document.querySelector(`.br${id_lista}`).style.display = "none"
+
+                    body.parentElement.parentElement.prepend(vazia)
+                    }
+                }
+            } else {
+                alert(resposta)
+            }   
+        })
+    }
+
+    function mostrar_add (id) {
+        const a = document.querySelector(`#a${id}`)
+        const ba = document.querySelector(`#ba${id}`)
+
+        if (ba.innerHTML === "Mostrar adicionar"){
+            a.style.display = 'block'
+            ba.innerHTML = "Esconder adicionar"
+        } 
+        else if (ba.innerHTML === "Esconder adicionar") {
+            a.style.display = 'none'
+            ba.innerHTML = "Mostrar adicionar"
+        }
+    }
+
+    function adicionar (id_lista) {
+        const produto = document.querySelector(`#p${id_lista}`)
+        const quantidade = document.querySelector(`#q${id_lista}`)
+        const table = document.querySelector(`#t${id_lista}`)
+        let ja_tem = false;
+
+        $.get(`/add?p=${produto.value}&l=${id_lista}&q=${quantidade.value}` +'&d=true', (resposta) => {
+
+            if (document.querySelector(`.v${id_lista}`)){
+                document.querySelector(`.v${id_lista}`).remove()
+            }
+
+            if (table.style.display === "none"){
+                table.style.display = "block"
+            }
+
+            Array.from(document.querySelector(`#t${id_lista}`).children[1].children).forEach((tr) => {
+                if (resposta[1] === tr.children[0].innerHTML) {
+                    let quant = parseInt(tr.children[1].innerHTML) + parseInt(quantidade.value)
+                    tr.children[1].innerHTML = `${quant}`
+                    ja_tem = true;
+                }
+            })
+
+            if (!ja_tem) {
+                let tr = document.createElement("TR");
+                tr.setAttribute("id", `r${resposta[0]}`)
+
+                let tdp = document.createElement("TD");
+                tdp.innerHTML = resposta[1]
+
+                let tdq = document.createElement("TD");
+                tdq.innerHTML = quantidade.value
+
+                let tdmudar = document.createElement("TD");
+
+                let aumbutton = document.createElement("BUTTON");
+                aumbutton.setAttribute("class", "close")
+                aumbutton.setAttribute("aria-label", "Close")
+                aumbutton.setAttribute("onclick", `aumentar(this.parentElement.parentElement,'${id_lista}')`)
+
+                let aumbutspan = document.createElement("SPAN");
+                aumbutspan.setAttribute("aria-hidden", "true")
+                aumbutspan.innerHTML = "&plus;"
+
+                aumbutton.appendChild(aumbutspan)
+
+                tdmudar.appendChild(aumbutton)
+
+                let dimbutton = document.createElement("BUTTON");
+                dimbutton.setAttribute("class", "close")
+                dimbutton.setAttribute("aria-label", "Close")
+                dimbutton.setAttribute("onclick", `diminuir(this.parentElement.parentElement,'${id_lista}')`)
+
+                let dimbutspan = document.createElement("SPAN");
+                dimbutspan.setAttribute("aria-hidden", "true")
+                dimbutspan.innerHTML = "&minus;"
+
+                dimbutton.appendChild(dimbutspan)
+
+                tdmudar.appendChild(dimbutton)
+
+                let tdex = document.createElement("TD");
+
+                let exbutton = document.createElement("BUTTON");
+                exbutton.setAttribute("class", "close")
+                exbutton.setAttribute("aria-label", "Close")
+                exbutton.setAttribute("onclick", `excluir(this.parentElement.parentElement,'${id_lista}')`)
+
+                let exbutspan = document.createElement("SPAN");
+                exbutspan.setAttribute("aria-hidden", "true")
+                exbutspan.innerHTML = "&times;"
+
+                exbutton.appendChild(exbutspan)
+
+                tdex.appendChild(exbutton)
+
+                tr.appendChild(tdp)
+                tr.appendChild(tdq)
+                tr.appendChild(tdmudar)
+                tr.appendChild(tdex)
+
+                table.children[1].appendChild(tr);
+
+                quantidade.value = ""
+            } 
+        })
+    }
+
+</script>
 {% endblock %}

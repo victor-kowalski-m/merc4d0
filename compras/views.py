@@ -70,8 +70,8 @@ def index(request):
 @login_required(login_url='login')
 def acompanhamentos(request):
     return render(request, "compras/acompanhamentos.html", {
-        "acompanhamentos": Acompanhamento.objects.filter(usuario=request.user).order_by('nome')
-
+        "acompanhamentos": Acompanhamento.objects.filter(usuario=request.user).order_by('nome'),
+        "produtos": Produto.objects.order_by('nome'),
     })
 
 
@@ -446,6 +446,10 @@ def pedido(request):
 
                 total += quantidade * preco
 
+            if total == 0:
+                messages.error(request, "Nada a ser comprado!")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
             request.session['pedido_lista'] = data['lista'].__str__()
             request.session['pedido_acompanhamento'] = data['acompanhamento'].__str__()
             request.session['pedido_supermercado'] = data['supermercado'].__str__()
@@ -666,20 +670,37 @@ def acompanhamento(request, id):
 def excluir(request):
     prod_lista = request.GET.get('p', '')
 
-    try:
-        p = ProdutoLista.objects.get(pk=prod_lista)
-    except ProdutoLista.DoesNotExist:
-        return JsonResponse("Produto não existe.", safe=False)
+    if not request.GET.get('d'):
+        try:
+            p = ProdutoLista.objects.get(pk=prod_lista)
+        except ProdutoLista.DoesNotExist:
+            return JsonResponse("Produto não existe.", safe=False)
+
+    else: 
+        try:
+            p = ProdutoAcompanhamento.objects.get(pk=prod_lista)
+        except ProdutoAcompanhamento.DoesNotExist:
+            return JsonResponse("Produto não existe.", safe=False)
+
+
     p.delete()
     return JsonResponse("Produto excluído!", safe=False)
 
 def aumentar(request):
     prod_lista = request.GET.get('p', '')
 
-    try:
-        p = ProdutoLista.objects.get(pk=prod_lista)
-    except ProdutoLista.DoesNotExist:
-        return JsonResponse("Produto não existe.", safe=False)
+    if not request.GET.get('d'):
+        try:
+            p = ProdutoLista.objects.get(pk=prod_lista)
+        except ProdutoLista.DoesNotExist:
+            return JsonResponse("Produto não existe.", safe=False)
+    
+    else:
+        try:
+            p = ProdutoAcompanhamento.objects.get(pk=prod_lista)
+        except ProdutoAcompanhamento.DoesNotExist:
+            return JsonResponse("Produto não existe.", safe=False)
+
     p.quantidade += 1
     p.save()
     return JsonResponse("Aumentado", safe=False)
@@ -687,10 +708,18 @@ def aumentar(request):
 def diminuir(request):
     prod_lista = request.GET.get('p', '')
 
-    try:
-        p = ProdutoLista.objects.get(pk=prod_lista)
-    except ProdutoLista.DoesNotExist:
-        return JsonResponse("Produto não existe.", safe=False)
+    if not request.GET.get('d'):
+        try:
+            p = ProdutoLista.objects.get(pk=prod_lista)
+        except ProdutoLista.DoesNotExist:
+            return JsonResponse("Produto não existe.", safe=False)
+
+    else:
+        try:
+            p = ProdutoAcompanhamento.objects.get(pk=prod_lista)
+        except ProdutoAcompanhamento.DoesNotExist:
+            return JsonResponse("Produto não existe.", safe=False)
+    
     if p.quantidade == 1:
         p.delete()
     else:
@@ -704,18 +733,36 @@ def add(request):
     id_lista = request.GET.get('l', '')
     quantidade = request.GET.get('q', '')
 
-    if ProdutoLista.objects.filter(lista=id_lista, produto=id_produto).exists():
-        p = ProdutoLista.objects.get(
-            produto=Produto.objects.get(pk=id_produto),
-            lista=Lista.objects.get(pk=id_lista))
-        p.quantidade += int(quantidade)
-        p.save() 
-        return JsonResponse([p.id, p.produto.nome], safe=False)
+    if not request.GET.get('d'):
+        if ProdutoLista.objects.filter(lista=id_lista, produto=id_produto).exists():
+            p = ProdutoLista.objects.get(
+                produto=Produto.objects.get(pk=id_produto),
+                lista=Lista.objects.get(pk=id_lista))
+            p.quantidade += int(quantidade)
+            p.save() 
+            return JsonResponse([p.id, p.produto.nome], safe=False)
+
+        else:
+            p = ProdutoLista(
+                produto=Produto.objects.get(pk=id_produto),
+                lista=Lista.objects.get(pk=id_lista),
+                quantidade=quantidade)
+            p.save()
+            return JsonResponse([p.id, p.produto.nome], safe=False)
 
     else:
-        p = ProdutoLista(
-            produto=Produto.objects.get(pk=id_produto),
-            lista=Lista.objects.get(pk=id_lista),
-            quantidade=quantidade)
-        p.save()
-        return JsonResponse([p.id, p.produto.nome], safe=False)
+        if ProdutoAcompanhamento.objects.filter(acompanhamento=id_lista, produto=id_produto).exists():
+            p = ProdutoAcompanhamento.objects.get(
+                produto=Produto.objects.get(pk=id_produto),
+                acompanhamento=Acompanhamento.objects.get(pk=id_lista))
+            p.quantidade += int(quantidade)
+            p.save() 
+            return JsonResponse([p.id, p.produto.nome], safe=False)
+
+        else:
+            p = ProdutoAcompanhamento(
+                produto=Produto.objects.get(pk=id_produto),
+                acompanhamento=Acompanhamento.objects.get(pk=id_lista),
+                quantidade=quantidade)
+            p.save()
+            return JsonResponse([p.id, p.produto.nome], safe=False)
