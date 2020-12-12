@@ -1,7 +1,7 @@
 {% extends "compras/layout.html" %}
 
 {% block body %}
-    <h4>Total: {{ total }}</h4>
+    <h4>Total: R$ {{ total|floatformat:2 }}</h4>
     <br>
     <ul>
     {% for item in itens %}
