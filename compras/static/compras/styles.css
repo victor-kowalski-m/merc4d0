@@ -4,7 +4,7 @@
   --primary-background: #fffaea;
   --secondary-background: #f4a896;
   --tertiary-background: #ffd494;
-  --nav-background:#b2b4ce;
+  --nav-background:#ffd494;
   font-family: Montserrat, sans-serif;
   font-size: 16px;
   line-height: 1.5em;
@@ -24,6 +24,13 @@ body {
 
 main {
   min-height: 90vh;
+}
+
+.box_lista_despensa{
+  box-shadow: 3px 3px 5px 6px #ccc;
+  padding: 15px;
+  border-radius: 5%;
+  width: 80%;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -152,8 +159,8 @@ header p {
   padding: 10px;
 }
 
-.form_add {
+/* .form_add {
   border: solid var(--nav-background) 2px;
   padding: 10px;
   border-radius: 5px;
-}
+} */

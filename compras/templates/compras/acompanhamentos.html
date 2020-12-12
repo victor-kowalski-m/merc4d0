@@ -20,7 +20,7 @@
     <div id="cl{{ acompanhamento.id }}">
 
     <!-- Div que mostra ou esconde o conteúdo do acompanhamento -->
-    <div id="l{{ acompanhamento.id }}" style="display: none;">
+    <div id="l{{ acompanhamento.id }}" style="display: none;" class="box_lista_despensa">
         <h4><a href="" onclick="document.querySelector('#l{{ acompanhamento.id }}').style.display = 'none';
                                 document.querySelector(`#cl{{ acompanhamento.id }}`).appendChild(document.querySelector('#l{{ acompanhamento.id }}'));
                                 document.querySelector('#row').children[1].remove()

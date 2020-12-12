@@ -3,140 +3,143 @@
 
 {% block body %}
 <div class="container">
-<div id="row" class="row">
-<div class="col">
-<h4>Minhas Listas:</h4>
-<br>
-<ul>
-    {% for lista in listas %}
-    {% if forloop.counter0 > 0 %}
-    <hr>
-    {% endif %}
+    <div id="row" class="row">
+        <div class="col">
+            <h4>Minhas Listas:</h4>
+            <br>
+            <ul>
+                {% for lista in listas %}
+                {% if forloop.counter0 > 0 %}
+                <hr>
+                {% endif %}
 
-    <li>
-        <h4><a href="" onclick="mostrar('{{ lista.id }}'); return false">{{ lista.nome }}</a></h4>
-    </li>
-    
-    <div id="cl{{ lista.id }}">
+                <li>
+                    <h4><a href="" onclick="mostrar('{{ lista.id }}'); return false">{{ lista.nome }}</a></h4>
+                </li>
 
-    <!-- Div que mostra ou esconde o conteúdo da lista -->
-    <div id="l{{ lista.id }}" style="display: none;">
-        <h4><a href="" onclick="document.querySelector('#l{{ lista.id }}').style.display = 'none';
+                <div id="cl{{ lista.id }}">
+
+                    <!-- Div que mostra ou esconde o conteúdo da lista -->
+                    <div id="l{{ lista.id }}" style="display: none;" class="box_lista_despensa">
+                        <h4><a href="" onclick="document.querySelector('#l{{ lista.id }}').style.display = 'none';
                                 document.querySelector(`#cl{{ lista.id }}`).appendChild(document.querySelector('#l{{ lista.id }}'));
                                 document.querySelector('#row').children[1].remove()
                                 return false">{{ lista.nome }}</a></h4>
-        <br>
-        {% if lista.produtos.all %}
-        <table id="t{{lista.id}}" class="table">
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col">Produto</th>
-                    <th scope="col">Quantidade</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for produto in lista.produtos.all %}
-                <tr id="r{{ produto.id }}">
-                    <td>{{ produto.produto.nome }}</td>
-                    <td>{{ produto.quantidade }}</td>
-                    <td>
-                        <button class="close" aria-label="Close"
-                            onclick="aumentar(this.parentElement.parentElement, '{{ lista.id }}')">
-                            <span aria-hidden="true">&plus;</span>
-                        </button>
-                        <button class="close" aria-label="Close"
-                            onclick="diminuir(this.parentElement.parentElement, '{{ lista.id }}')">
-                            <span aria-hidden="true">&minus;</span>
-                        </button>
-                    </td>
-                    <td>
-                        <button class="close" aria-label="Close"
-                            onclick="excluir(this.parentElement.parentElement, '{{ lista.id }}')">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </td>
-                </tr>
+                        <br>
+                        {% if lista.produtos.all %}
+                        <table id="t{{lista.id}}" class="table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Produto</th>
+                                    <th scope="col">Quantidade</th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for produto in lista.produtos.all %}
+                                <tr id="r{{ produto.id }}">
+                                    <td>{{ produto.produto.nome }}</td>
+                                    <td>{{ produto.quantidade }}</td>
+                                    <td>
+                                        <button class="close" aria-label="Close"
+                                            onclick="aumentar(this.parentElement.parentElement, '{{ lista.id }}')">
+                                            <span aria-hidden="true">&plus;</span>
+                                        </button>
+                                        <button class="close" aria-label="Close"
+                                            onclick="diminuir(this.parentElement.parentElement, '{{ lista.id }}')">
+                                            <span aria-hidden="true">&minus;</span>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="close" aria-label="Close"
+                                            onclick="excluir(this.parentElement.parentElement, '{{ lista.id }}')">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="br{{lista.id}}">
+                        </div>
+
+                        {% else %}
+                        <div class="v{{ lista.id }}">
+                            <p>Lista vazia.</p>
+                        </div>
+                        <table id="t{{lista.id}}" class="table" style="display: none;">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th scope="col">Produto</th>
+                                    <th scope="col">Quantidade</th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <div class="br{{lista.id}}">
+                        </div>
+
+                        {% endif %}
+                        <hr>
+                        <!-- Div que mostra ou esconde adicionar produtos -->
+                        <div class="form_add" id="a{{ lista.id }}">
+                            <div class="form-group">
+                                <select id="p{{ lista.id }}" class="selectpicker" data-live-search="true"
+                                    title="Escolha o produto" required>
+                                    {% for produto in produtos %}
+                                    <option value="{{ produto.id }}">{{ produto.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="number" required class="form-control" min="1" id="q{{ lista.id }}"
+                                    placeholder="Quantidade">
+                            </div>
+                            <button type="button" class="btn btn-primary" id="add{{ lista.id }}"
+                                onclick="adicionar('{{ lista.id }}')">Adicionar</button>
+                            <br>
+                            <hr>
+
+                            <form style="padding-top: 5px;" action="{% url 'lista' lista.id %}" method="post">
+                                {% csrf_token %}
+                                <a href="{% url 'pedido' %}?lista={{lista.id}}">
+                                    <button type="button" class="btn btn-primary">Pedir lista</button>
+                                </a>
+                                <input type="hidden" name="lista" value="excluir">
+                                <input type="submit" class="btn btn-danger" value="Excluir lista">
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                {% empty %}
+                <p>Nenhuma lista ainda.</p>
                 {% endfor %}
-            </tbody>
-        </table>
-        <div class="br{{lista.id}}">
-        </div>
-
-        {% else %}
-        <div class="v{{ lista.id }}">
-            <p>Lista vazia.</p>
-        </div>
-        <table id="t{{lista.id}}" class="table" style="display: none;">
-            <thead class="thead-light">
-                <tr>
-                    <th scope="col">Produto</th>
-                    <th scope="col">Quantidade</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-        <div class="br{{lista.id}}">
-        </div>
-
-        {% endif %}
-
-        <!-- Div que mostra ou esconde adicionar produtos -->
-        <div class="form_add" id="a{{ lista.id }}">
-            <div class="form-group">
-                <select id="p{{ lista.id }}" class="selectpicker" data-live-search="true" title="Escolha o produto"
-                    required>
-                    {% for produto in produtos %}
-                    <option value="{{ produto.id }}">{{ produto.nome }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="form-group">
-                <input type="number" required class="form-control" min="1" id="q{{ lista.id }}"
-                    placeholder="Quantidade">
-            </div>
-            <button type="button" class="btn btn-primary" id="add{{ lista.id }}"
-                onclick="adicionar('{{ lista.id }}')">Adicionar</button>
+            </ul>
             <br>
-            <hr>
-
-            <form style="padding-top: 5px;" action="{% url 'lista' lista.id %}" method="post">
-                {% csrf_token %}
-                <a href="{% url 'pedido' %}?lista={{lista.id}}">
-                    <button type="button" class="btn btn-primary">Pedir lista</button>
+            <button id="but_criar" type="button"
+                onclick="document.querySelector('#criar').style.display = 'block'; this.style.display = 'none'"
+                class="btn btn-primary">Criar nova lista</button>
+            <div id="criar" style="display: none;">
+                <a href=""
+                    onclick="document.querySelector('#criar').style.display = 'none'; document.querySelector('#but_criar').style.display = 'inline-block'; return false">
+                    <h4>Nova Lista:</h4>
                 </a>
-                <input type="hidden" name="lista" value="excluir">
-                <input type="submit" class="btn btn-danger" value="Excluir lista">
-            </form>
+                <br>
+                <form action="{% url 'criar' %}" method="post" autocomplete="off">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input autofocus class="form-control" type="text" required name="nome" placeholder="Nome">
+                    </div>
+                    <input class="btn btn-primary" type="submit" value="Criar">
+                </form>
+            </div>
         </div>
     </div>
-
-    </div>
-{% empty %}
-    <p>Nenhuma lista ainda.</p>
-    {% endfor %}
-</ul>
-<br>
-<button id="but_criar" type="button" onclick="document.querySelector('#criar').style.display = 'block'; this.style.display = 'none'" class="btn btn-primary">Criar nova lista</button>
-<div id="criar" style="display: none;">
-    <a href="" onclick="document.querySelector('#criar').style.display = 'none'; document.querySelector('#but_criar').style.display = 'inline-block'; return false" >
-        <h4>Nova Lista:</h4>
-    </a>
-    <br>
-    <form action="{% url 'criar' %}" method="post" autocomplete="off">
-        {% csrf_token %}
-        <div class="form-group">
-            <input autofocus class="form-control" type="text" required name="nome" placeholder="Nome">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Criar">
-    </form>
-</div>
-</div>
-</div>
 </div>
 {% endblock %}
 
@@ -148,7 +151,7 @@
         const row = document.querySelector('#row')
         const origem_l = document.querySelector(`#cl${id}`)
 
-        if (row.children.length === 2){
+        if (row.children.length === 2) {
             row.children[1].style.display = 'none';
             origem_l.appendChild(row.children[1])
         }
