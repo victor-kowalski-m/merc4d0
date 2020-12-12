@@ -30,7 +30,22 @@ main {
   box-shadow: 3px 3px 5px 6px #ccc;
   padding: 15px;
   border-radius: 5%;
+  width: 100%;
+  max-width: 400px;
+}
+
+.box_conta{
+  box-shadow: 3px 3px 5px 6px #ccc;
+  padding: 15px;
+  border-radius: 5%;
   width: 80%;
+  max-width: 400px;
+}
+
+.center_box{
+  display:flex;
+  justify-content: center;
+
 }
 
 /* Chrome, Safari, Edge, Opera */
