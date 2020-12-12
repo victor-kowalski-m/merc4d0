@@ -23,7 +23,7 @@ body {
 }
 
 main {
-  min-height: 90vh;
+  min-height: 93vh;
 }
 
 .box_lista_despensa{
@@ -162,7 +162,10 @@ ul {
 footer {
   clear: both;
   position: relative;
-  height: 50px;
+  height: 52px;
+  background-color: var(--nav-background);
+  color: var(--primary-color);
+  font-weight: bold;
 }
 
 body header {
