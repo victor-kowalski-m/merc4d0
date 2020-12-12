@@ -95,14 +95,17 @@
             <input type="submit" class="btn btn-danger" value="Excluir lista">
         </form>
     </div>
+    </div>
 {% empty %}
     <p>Nenhuma lista ainda.</p>
 {% endfor %}
 </ul>
 <br>
-<button type="button" onclick="document.querySelector('#criar').style.display = 'block'; this.style.display = 'none'" class="btn btn-primary">Criar nova lista</button>
+<button id="but_criar" type="button" onclick="document.querySelector('#criar').style.display = 'block'; this.style.display = 'none'" class="btn btn-primary">Criar nova lista</button>
 <div id="criar" style="display: none;">
-    <h4>Nova Lista:</h4>
+    <a href="" onclick="document.querySelector('#criar').style.display = 'none'; document.querySelector('#but_criar').style.display = 'inline-block'; return false" >
+        <h4>Nova Lista:</h4>
+    </a>
     <br>
     <form action="{% url 'criar' %}" method="post" autocomplete="off">
         {% csrf_token %}
