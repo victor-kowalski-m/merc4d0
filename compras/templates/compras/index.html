@@ -47,7 +47,6 @@
                 </tbody>
             </table>
             <div class="br{{lista.id}}">
-                <br>
             </div>
             
         {% else %}
@@ -67,13 +66,12 @@
                 </tbody>
             </table>
             <div class="br{{lista.id}}">
-             <br>
             </div>
 
         {% endif %}
 
         <!-- Div que mostra ou esconde adicionar produtos -->
-        <div id="a{{ lista.id }}">
+        <div class="form_add" id="a{{ lista.id }}">
             <div class="form-group">
                 <select id="p{{ lista.id }}" class="selectpicker" data-live-search="true" title="Escolha o produto" required>
                     {% for produto in produtos %}
@@ -85,17 +83,17 @@
                 <input type="number" required class="form-control" min="1" id="q{{ lista.id }}" placeholder="Quantidade">
             </div>
             <button type="button" class="btn btn-primary" id="add{{ lista.id }}" onclick="adicionar('{{ lista.id }}')">Adicionar</button>
-            <br><br>
-        </div>
-        <a href="{% url 'pedido' %}?lista={{lista.id}}">
-            <button type="button" class="btn btn-primary">Pedir lista</button>
-        </a>
+            <br>
+        <hr>
+        
         <form style="padding-top: 5px;" action="{% url 'lista' lista.id %}" method="post">
             {% csrf_token %}
+            <a href="{% url 'pedido' %}?lista={{lista.id}}">
+                <button type="button" class="btn btn-primary">Pedir lista</button>
+            </a>
             <input type="hidden" name="lista" value="excluir">
             <input type="submit" class="btn btn-danger" value="Excluir lista">
         </form>
-        <br>
     </div>
 {% empty %}
     <p>Nenhuma lista ainda.</p>
