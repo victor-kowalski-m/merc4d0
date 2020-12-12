@@ -2,103 +2,115 @@
 {% load static %}
 
 {% block body %}
+<div class="container">
+<div class="row">
+<div class="col">
 <h4>Minhas Listas:</h4>
 <br>
 <ul>
-{% for lista in listas %}
+    {% for lista in listas %}
     {% if forloop.counter0 > 0 %}
     <hr>
     {% endif %}
-    <li><h4><a href="" onclick="mostrar('{{ lista.id }}'); return false" >{{ lista.nome }}</a></h4></li>
-    
+
+    <li>
+        <h4><a href="" onclick="mostrar('{{ lista.id }}'); return false">{{ lista.nome }}</a></h4>
+    </li>
+
     <!-- Div que mostra ou esconde o conteúdo da lista -->
     <div id="l{{ lista.id }}" style="display: none;">
         <br>
         {% if lista.produtos.all %}
-            <table id="t{{lista.id}}" class="table">
-                <thead class="thead-light">
-                    <tr>
-                        <th scope="col">Produto</th>
-                        <th scope="col">Quantidade</th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for produto in lista.produtos.all %}
-                        <tr id="r{{ produto.id }}">
-                            <td>{{ produto.produto.nome }}</td>
-                            <td>{{ produto.quantidade }}</td>
-                            <td>
-                                <button class="close" aria-label="Close" onclick="aumentar(this.parentElement.parentElement, '{{ lista.id }}')">
-                                    <span aria-hidden="true">&plus;</span>
-                                </button>
-                                <button class="close" aria-label="Close" onclick="diminuir(this.parentElement.parentElement, '{{ lista.id }}')">
-                                    <span aria-hidden="true">&minus;</span>
-                                </button>
-                            </td>
-                            <td>
-                                    <button class="close" aria-label="Close" onclick="excluir(this.parentElement.parentElement, '{{ lista.id }}')">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <div class="br{{lista.id}}">
-            </div>
-            
+        <table id="t{{lista.id}}" class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Produto</th>
+                    <th scope="col">Quantidade</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produto in lista.produtos.all %}
+                <tr id="r{{ produto.id }}">
+                    <td>{{ produto.produto.nome }}</td>
+                    <td>{{ produto.quantidade }}</td>
+                    <td>
+                        <button class="close" aria-label="Close"
+                            onclick="aumentar(this.parentElement.parentElement, '{{ lista.id }}')">
+                            <span aria-hidden="true">&plus;</span>
+                        </button>
+                        <button class="close" aria-label="Close"
+                            onclick="diminuir(this.parentElement.parentElement, '{{ lista.id }}')">
+                            <span aria-hidden="true">&minus;</span>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="close" aria-label="Close"
+                            onclick="excluir(this.parentElement.parentElement, '{{ lista.id }}')">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="br{{lista.id}}">
+        </div>
+
         {% else %}
         <div class="v{{ lista.id }}">
             <p>Lista vazia.</p>
         </div>
-            <table id="t{{lista.id}}" class="table" style="display: none;">
-                <thead class="thead-light">
-                    <tr>
-                        <th scope="col">Produto</th>
-                        <th scope="col">Quantidade</th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-            <div class="br{{lista.id}}">
-            </div>
+        <table id="t{{lista.id}}" class="table" style="display: none;">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Produto</th>
+                    <th scope="col">Quantidade</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div class="br{{lista.id}}">
+        </div>
 
         {% endif %}
 
         <!-- Div que mostra ou esconde adicionar produtos -->
         <div class="form_add" id="a{{ lista.id }}">
             <div class="form-group">
-                <select id="p{{ lista.id }}" class="selectpicker" data-live-search="true" title="Escolha o produto" required>
+                <select id="p{{ lista.id }}" class="selectpicker" data-live-search="true" title="Escolha o produto"
+                    required>
                     {% for produto in produtos %}
                     <option value="{{ produto.id }}">{{ produto.nome }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="form-group">
-                <input type="number" required class="form-control" min="1" id="q{{ lista.id }}" placeholder="Quantidade">
+                <input type="number" required class="form-control" min="1" id="q{{ lista.id }}"
+                    placeholder="Quantidade">
             </div>
-            <button type="button" class="btn btn-primary" id="add{{ lista.id }}" onclick="adicionar('{{ lista.id }}')">Adicionar</button>
+            <button type="button" class="btn btn-primary" id="add{{ lista.id }}"
+                onclick="adicionar('{{ lista.id }}')">Adicionar</button>
             <br>
-        <hr>
-        
-        <form style="padding-top: 5px;" action="{% url 'lista' lista.id %}" method="post">
-            {% csrf_token %}
-            <a href="{% url 'pedido' %}?lista={{lista.id}}">
-                <button type="button" class="btn btn-primary">Pedir lista</button>
-            </a>
-            <input type="hidden" name="lista" value="excluir">
-            <input type="submit" class="btn btn-danger" value="Excluir lista">
-        </form>
-    </div>
+            <hr>
+
+            <form style="padding-top: 5px;" action="{% url 'lista' lista.id %}" method="post">
+                {% csrf_token %}
+                <a href="{% url 'pedido' %}?lista={{lista.id}}">
+                    <button type="button" class="btn btn-primary">Pedir lista</button>
+                </a>
+                <input type="hidden" name="lista" value="excluir">
+                <input type="submit" class="btn btn-danger" value="Excluir lista">
+            </form>
+        </div>
     </div>
 {% empty %}
     <p>Nenhuma lista ainda.</p>
-{% endfor %}
+    {% endfor %}
 </ul>
 <br>
 <button id="but_criar" type="button" onclick="document.querySelector('#criar').style.display = 'block'; this.style.display = 'none'" class="btn btn-primary">Criar nova lista</button>
@@ -110,28 +122,34 @@
     <form action="{% url 'criar' %}" method="post" autocomplete="off">
         {% csrf_token %}
         <div class="form-group">
-        <input  autofocus class="form-control" type="text" required name="nome" placeholder="Nome">
+            <input autofocus class="form-control" type="text" required name="nome" placeholder="Nome">
         </div>
         <input class="btn btn-primary" type="submit" value="Criar">
     </form>
+</div>
+</div>
+<div class="col">
+
+</div>
+</div>
 </div>
 {% endblock %}
 
 {% block script %}
 <script>
- 
-    function mostrar (id) {
+
+    function mostrar(id) {
         const l = document.querySelector(`#l${id}`)
 
-        if (l.style.display === 'none'){
+        if (l.style.display === 'none') {
             l.style.display = 'block'
-        } 
+        }
         else if (l.style.display === 'block') {
             l.style.display = 'none'
         }
     }
 
-    function excluir(produto, id_lista){
+    function excluir(produto, id_lista) {
         row = produto
         const body = row.parentElement
 
@@ -142,7 +160,7 @@
                     body.parentElement.style.display = "none"
 
                     let vazia = document.createElement("P")
-                    vazia.setAttribute("class",`v${id_lista}`)
+                    vazia.setAttribute("class", `v${id_lista}`)
                     vazia.innerHTML = "<br>Lista Vazia."
 
                     document.querySelector(`.br${id_lista}`).style.display = "none"
@@ -152,11 +170,11 @@
 
             } else {
                 alert(resposta)
-            }   
+            }
         })
     }
 
-    function aumentar(produto, id_lista){
+    function aumentar(produto, id_lista) {
         row = produto
         const body = row.parentElement
 
@@ -165,11 +183,11 @@
                 row.children[1].innerHTML = `${parseInt(row.children[1].innerHTML) + 1}`
             } else {
                 alert(resposta)
-            }   
+            }
         })
     }
 
-    function diminuir(produto, id_lista){
+    function diminuir(produto, id_lista) {
         row = produto
         const body = row.parentElement
 
@@ -180,38 +198,38 @@
                 } else {
                     row.remove()
                     if (body.children.length === 0) {
-                    body.parentElement.style.display = "none"
+                        body.parentElement.style.display = "none"
 
-                    let vazia = document.createElement("P")
-                    vazia.setAttribute("class",`v${id_lista}`)
-                    vazia.innerHTML = "<br>Lista Vazia."
+                        let vazia = document.createElement("P")
+                        vazia.setAttribute("class", `v${id_lista}`)
+                        vazia.innerHTML = "<br>Lista Vazia."
 
-                    document.querySelector(`.br${id_lista}`).style.display = "none"
+                        document.querySelector(`.br${id_lista}`).style.display = "none"
 
-                    body.parentElement.parentElement.prepend(vazia)
+                        body.parentElement.parentElement.prepend(vazia)
                     }
                 }
             } else {
                 alert(resposta)
-            }   
+            }
         })
     }
 
-    function mostrar_add (id) {
+    function mostrar_add(id) {
         const a = document.querySelector(`#a${id}`)
         const ba = document.querySelector(`#ba${id}`)
 
-        if (ba.innerHTML === "Mostrar adicionar"){
+        if (ba.innerHTML === "Mostrar adicionar") {
             a.style.display = 'block'
             ba.innerHTML = "Esconder adicionar"
-        } 
+        }
         else if (ba.innerHTML === "Esconder adicionar") {
             a.style.display = 'none'
             ba.innerHTML = "Mostrar adicionar"
         }
     }
 
-    function adicionar (id_lista) {
+    function adicionar(id_lista) {
         const produto = document.querySelector(`#p${id_lista}`)
         const quantidade = document.querySelector(`#q${id_lista}`)
         const table = document.querySelector(`#t${id_lista}`)
@@ -219,11 +237,11 @@
 
         $.get(`/add?p=${produto.value}&l=${id_lista}&q=${quantidade.value}`, (resposta) => {
 
-            if (document.querySelector(`.v${id_lista}`)){
+            if (document.querySelector(`.v${id_lista}`)) {
                 document.querySelector(`.v${id_lista}`).remove()
             }
 
-            if (table.style.display === "none"){
+            if (table.style.display === "none") {
                 table.style.display = "block"
             }
 
@@ -296,7 +314,7 @@
                 table.children[1].appendChild(tr);
 
                 quantidade.value = ""
-            } 
+            }
         })
     }
 
