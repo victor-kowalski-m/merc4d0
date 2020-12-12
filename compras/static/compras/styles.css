@@ -4,6 +4,7 @@
   --primary-background: #fffaea;
   --secondary-background: #f4a896;
   --tertiary-background: #ffd494;
+  --nav-background:#b2b4ce;
   font-family: Montserrat, sans-serif;
   font-size: 16px;
   line-height: 1.5em;
@@ -139,11 +140,10 @@ footer {
   clear: both;
   position: relative;
   height: 50px;
-  background-color:#a0a3ca;
 }
 
 body header {
-  background-color:#a0a3ca;
+  background-color:var(--nav-background);
   padding: 0px;
 }
 
