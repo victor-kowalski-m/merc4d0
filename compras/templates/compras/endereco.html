@@ -1,34 +1,38 @@
 {% extends "compras/layout.html" %}
 
 {% block body %}
-    <form action="{% url 'endereco' %}" method="post" autocomplete="off">
-        {% csrf_token %}
-        <div class="form-group">
-            <input class="form-control" type="text" required name="cep" placeholder="CEP (apenas números)">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="text" required name="rua" placeholder="Rua/Avenida">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="text" required name="numero" placeholder="Número">
-        </div>
-        <div class="form-group">    
-            <input class="form-control" type="text" name="complemento" placeholder="Complemento">
-        </div>
-        <div class="form-group">    
-            <input class="form-control" type="text" required name="bairro" placeholder="Bairro">
-        </div>
-        <div class="form-group">
-            <select name="estado" class="form-control" required>
-                <option selected="selected">Estado</option>
-                {% for estado in estados %}
-                <option value="{{ estado.0 }}">{{ estado.0 }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="text" required name="cidade" placeholder="Cidade">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Adicionar">
-    </form>
+<div class='center_box'>
+    <div class="box_padrao">
+        <form action="{% url 'endereco' %}" method="post" autocomplete="off">
+            {% csrf_token %}
+            <div class="form-group">
+                <input class="form-control" type="text" required name="cep" placeholder="CEP (apenas números)">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" required name="rua" placeholder="Rua/Avenida">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" required name="numero" placeholder="Número">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" name="complemento" placeholder="Complemento">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" required name="bairro" placeholder="Bairro">
+            </div>
+            <div class="form-group">
+                <select name="estado" class="form-control" required>
+                    <option selected="selected">Estado</option>
+                    {% for estado in estados %}
+                    <option value="{{ estado.0 }}">{{ estado.0 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" required name="cidade" placeholder="Cidade">
+            </div>
+            <input class="btn btn-primary" type="submit" value="Adicionar">
+        </form>
+    </div>
+</div>
 {% endblock %}
