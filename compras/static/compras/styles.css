@@ -10,11 +10,15 @@
 }
 
 body {
-  padding: 10px;
   font-size: large;
   height: 100%;
   min-height: 500px;
+  padding: 0px;
   /* min-width: 1000px; */
+}
+
+.conteudo {
+  padding: 10px;
 }
 
 main {
@@ -135,4 +139,14 @@ footer {
   clear: both;
   position: relative;
   height: 50px;
+  background-color:#a0a3ca;
+}
+
+body header {
+  background-color:#a0a3ca;
+  padding: 0px;
+}
+
+header p {
+  padding: 10px;
 }

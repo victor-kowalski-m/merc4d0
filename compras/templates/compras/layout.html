@@ -33,6 +33,7 @@
 </head>
 <body>
     <main>
+        <header>
         <section>
             {% if user.is_authenticated %}
             <p>Logado como <a id="username" href="{% url 'conta' %}">{{ user.username }}</a>.</p>
@@ -69,6 +70,8 @@
                 </ul>
             </nav>
         </h4>
+        <br>
+        </header>
         <hr>
         {% if messages %}
         <ul class="messages">
@@ -78,8 +81,10 @@
         </ul>
         {% endif %}
         <br>
+        <div class="conteudo">
         {% block body %}
         {% endblock %}
+        </div>
     </main>
     <footer class="text-center text-muted">
         <hr>
