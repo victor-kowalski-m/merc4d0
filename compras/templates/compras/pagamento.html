@@ -1,11 +1,11 @@
 {% extends "compras/layout.html" %}
 
 {% block body %}
-    <h4>Total: {{ total }}</h4>
+    <h4>Total: R$ {{ total }}</h4>
     <br>
     <ul>
     {% for item in itens %}
-        <li>{{ item.quantidade }} {{ item.produto }}(s) por {{ item.preco }} cada.</li>
+        <li>{{ item.quantidade }} {{ item.produto }}(s) por R$ {{ item.preco }} cada.</li>
     {% endfor %}
     </ul>
     <br>

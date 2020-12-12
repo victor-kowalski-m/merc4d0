@@ -2,132 +2,165 @@
 {% load static %}
 
 {% block body %}
-<h4>Minhas despensas:</h4>
+<div class="container">
+<div id="row" class="row">
+<div class="col">
+<h4>Minhas Despensas:</h4>
 <br>
 <ul>
-{% for lista in acompanhamentos %}
+    {% for acompanhamento in acompanhamentos %}
     {% if forloop.counter0 > 0 %}
     <hr>
     {% endif %}
-    <li><h4><a href="" onclick="mostrar('{{ lista.id }}'); return false" >{{ lista.nome }}</a></h4></li>
+
+    <li>
+        <h4><a href="" onclick="mostrar('{{ acompanhamento.id }}'); return false">{{ acompanhamento.nome }}</a></h4>
+    </li>
     
-    <!-- Div que mostra ou esconde o conteúdo da lista -->
-    <div id="l{{ lista.id }}" style="display: none;">
+    <div id="cl{{ acompanhamento.id }}">
+
+    <!-- Div que mostra ou esconde o conteúdo do acompanhamento -->
+    <div id="l{{ acompanhamento.id }}" style="display: none;">
+        <h4><a href="" onclick="document.querySelector('#l{{ acompanhamento.id }}').style.display = 'none';
+                                document.querySelector(`#cl{{ acompanhamento.id }}`).appendChild(document.querySelector('#l{{ acompanhamento.id }}'));
+                                document.querySelector('#row').children[1].remove()
+                                return false">{{ acompanhamento.nome }}</a></h4>
         <br>
-        {% if lista.produtos.all %}
-            <table id="t{{lista.id}}" class="table">
-                <thead class="thead-light">
-                    <tr>
-                        <th scope="col">Produto</th>
-                        <th scope="col">Quantidade</th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for produto in lista.produtos.all %}
-                        <tr id="r{{ produto.id }}">
-                            <td>{{ produto.produto.nome }}</td>
-                            <td>{{ produto.quantidade }}</td>
-                            <td>
-                                <button class="close" aria-label="Close" onclick="aumentar(this.parentElement.parentElement, '{{ lista.id }}')">
-                                    <span aria-hidden="true">&plus;</span>
-                                </button>
-                                <button class="close" aria-label="Close" onclick="diminuir(this.parentElement.parentElement, '{{ lista.id }}')">
-                                    <span aria-hidden="true">&minus;</span>
-                                </button>
-                            </td>
-                            <td>
-                                    <button class="close" aria-label="Close" onclick="excluir(this.parentElement.parentElement, '{{ lista.id }}')">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <div class="br{{lista.id}}">
-                <br>
-            </div>
-            
+        {% if acompanhamento.produtos.all %}
+        <table id="t{{acompanhamento.id}}" class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Produto</th>
+                    <th scope="col">Quantidade</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produto in acompanhamento.produtos.all %}
+                <tr id="r{{ produto.id }}">
+                    <td>{{ produto.produto.nome }}</td>
+                    <td>{{ produto.quantidade }}</td>
+                    <td>
+                        <button class="close" aria-label="Close"
+                            onclick="aumentar(this.parentElement.parentElement, '{{ acompanhamento.id }}')">
+                            <span aria-hidden="true">&plus;</span>
+                        </button>
+                        <button class="close" aria-label="Close"
+                            onclick="diminuir(this.parentElement.parentElement, '{{ acompanhamento.id }}')">
+                            <span aria-hidden="true">&minus;</span>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="close" aria-label="Close"
+                            onclick="excluir(this.parentElement.parentElement, '{{ acompanhamento.id }}')">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="br{{acompanhamento.id}}">
+        </div>
+
         {% else %}
-        <div class="v{{ lista.id }}">
+        <div class="v{{ acompanhamento.id }}">
             <p>Despensa vazia.</p>
         </div>
-            <table id="t{{lista.id}}" class="table" style="display: none;">
-                <thead class="thead-light">
-                    <tr>
-                        <th scope="col">Produto</th>
-                        <th scope="col">Quantidade</th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-            <div class="br{{lista.id}}">
-             <br>
-            </div>
+        <table id="t{{acompanhamento.id}}" class="table" style="display: none;">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Produto</th>
+                    <th scope="col">Quantidade</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div class="br{{acompanhamento.id}}">
+        </div>
 
         {% endif %}
 
         <!-- Div que mostra ou esconde adicionar produtos -->
-        <div id="a{{ lista.id }}">
+        <div class="form_add" id="a{{ acompanhamento.id }}">
             <div class="form-group">
-                <select id="p{{ lista.id }}" class="selectpicker" data-live-search="true" title="Escolha o produto" required>
+                <select id="p{{ acompanhamento.id }}" class="selectpicker" data-live-search="true" title="Escolha o produto"
+                    required>
                     {% for produto in produtos %}
                     <option value="{{ produto.id }}">{{ produto.nome }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="form-group">
-                <input type="number" required class="form-control" min="1" id="q{{ lista.id }}" placeholder="Quantidade">
+                <input type="number" required class="form-control" min="1" id="q{{ acompanhamento.id }}"
+                    placeholder="Quantidade">
             </div>
-            <button type="button" class="btn btn-primary" id="add{{ lista.id }}" onclick="adicionar('{{ lista.id }}')">Adicionar</button>
-            <br><br>
+            <button type="button" class="btn btn-primary" id="add{{ acompanhamento.id }}"
+                onclick="adicionar('{{ acompanhamento.id }}')">Adicionar</button>
+            <br>
+            <hr>
+
+            <form style="padding-top: 5px;" action="{% url 'acompanhamento' acompanhamento.id %}" method="post">
+                {% csrf_token %}
+                <a href="{% url 'pedido' %}?acompanhamento={{acompanhamento.id}}">
+                    <button type="button" class="btn btn-primary">Pedir lista</button>
+                </a>
+                <input type="hidden" name="acompanhamento" value="excluir">
+                <input type="submit" class="btn btn-danger" value="Excluir despensa">
+            </form>
         </div>
-        <a href="{% url 'pedido' %}?lista={{lista.id}}">
-            <button type="button" class="btn btn-primary">Pedir despensa</button>
-        </a>
-        <form style="padding-top: 5px;" action="{% url 'lista' lista.id %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="lista" value="excluir">
-            <input type="submit" class="btn btn-danger" value="Excluir despensa">
-        </form>
-        <br>
+    </div>
+
     </div>
 {% empty %}
     <p>Nenhuma despensa ainda.</p>
-{% endfor %}
+    {% endfor %}
 </ul>
 <br>
-<button type="button" onclick="document.querySelector('#criar').style.display = 'block'; this.style.display = 'none'" class="btn btn-primary">Criar nova despensa</button>
+<button id="but_criar" type="button" onclick="document.querySelector('#criar').style.display = 'block'; this.style.display = 'none'" class="btn btn-primary">Criar nova despensa</button>
 <div id="criar" style="display: none;">
-    <h4>Nova Despensa:</h4>
+    <a href="" onclick="document.querySelector('#criar').style.display = 'none'; document.querySelector('#but_criar').style.display = 'inline-block'; return false" >
+        <h4>Nova Despensa:</h4>
+    </a>
     <br>
-    <form action="{% url 'criar' %}" method="post" autocomplete="off">
+    <form action="{% url 'criar_acompanhamento' %}" method="post" autocomplete="off">
         {% csrf_token %}
         <div class="form-group">
-        <input  autofocus class="form-control" type="text" required name="nome" placeholder="Nome">
+            <input autofocus class="form-control" type="text" required name="nome" placeholder="Nome">
         </div>
         <input class="btn btn-primary" type="submit" value="Criar">
     </form>
+</div>
+</div>
+</div>
 </div>
 {% endblock %}
 
 {% block script %}
 <script>
- 
-    function mostrar (id) {
-        const l = document.querySelector(`#l${id}`)
 
-        if (l.style.display === 'none'){
-            l.style.display = 'block'
-        } 
-        else if (l.style.display === 'block') {
-            l.style.display = 'none'
+    function mostrar(id) {
+        const l = document.querySelector(`#l${id}`)
+        const row = document.querySelector('#row')
+        const origem_l = document.querySelector(`#cl${id}`)
+
+        if (row.children.length === 2){
+            row.children[1].style.display = 'none';
+            origem_l.appendChild(row.children[1])
         }
+
+        l.style.display = 'block';
+
+        let col = document.createElement("DIV");
+        col.setAttribute("class", "col")
+
+        col.appendChild(l)
+        row.appendChild(col)
+
     }
 
     function excluir(produto, id_lista){

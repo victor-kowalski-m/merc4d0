@@ -438,14 +438,15 @@ def pedido(request):
                     item = {
                         'quantidade': quantidade, 
                         'produto': produto.produto.nome,
-                        'preco': preco,
+                        'preco': round(preco,2),
                         'id': produto.produto.id
                         }
 
                     itens.append(item)
 
                 total += quantidade * preco
-
+                total = round(total,2)
+                
             if total == 0:
                 messages.error(request, "Nada a ser comprado!")
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

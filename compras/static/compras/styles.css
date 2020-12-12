@@ -134,6 +134,7 @@ ul {
 .table{
   width: auto;
   display: inline-block;
+  text-align: center;
 }
 
 footer {
