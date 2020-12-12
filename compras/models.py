@@ -46,6 +46,7 @@ class Cartao(models.Model):
 
 class Produto(models.Model):
     nome = models.CharField(max_length=50)
+    img_url = models.URLField(max_length=1000, blank=True)
 
     def __str__(self):
         return f"{self.nome}"

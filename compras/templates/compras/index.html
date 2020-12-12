@@ -103,7 +103,7 @@
                             <button type="button" class="btn btn-primary" id="add{{ lista.id }}"
                                 onclick="adicionar('{{ lista.id }}')">Adicionar</button>
                             <!-- Trigger the modal with a button -->
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Ver foto</button>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="foto('{{ lista.id }}')">Ver foto</button>
 
                             <!-- Modal -->
                             <div id="myModal" class="modal fade" role="dialog">
@@ -112,7 +112,7 @@
                                 <!-- Modal content-->
                                 <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title">Nome do Produto</h4>
+                                    <h4 id="nf{{ lista.id }}" class="modal-title">Nome do Produto</h4>
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     
                                 </div>
@@ -360,6 +360,13 @@
                 quantidade.value = ""
             }
         })
+    }
+
+    function foto (id_lista) {
+        const produto = document.querySelector(`#p${id_lista}`)
+        const nome_foto = document.querySelector(`#nf${id_lista}`)
+
+        nome_foto.innerHTML = produto.options[produto.selectedIndex].text
     }
 
 </script>
