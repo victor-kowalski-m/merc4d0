@@ -2,19 +2,21 @@
 
 
 {% block body %}
-<h4>Meus cartões:</h4>
-<br>
+<div class='center_box'>
+    <div class="box_padrao">
+        <h4>Meus cartões:</h4>
+        <br>
 
-{% if cartoes %}
-    <table class="table">
-        <thead class="thead-light">
-            <tr>
-                <th scope="col">Número</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for cartao in cartoes %}
+        {% if cartoes %}
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Número</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cartao in cartoes %}
                 <tr>
                     <td>{{ cartao.numero }}</td>
                     <td>
@@ -27,16 +29,17 @@
                         </form>
                     </td>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <br>
-{% else %}
-<p>Nenhum cartão ainda.</p>
-{% endif %}
-<br>
-<a href="{% url 'cartao'%}">
-<button type="button" class="btn btn-primary">Adicionar cartão</button>
-</a>
-
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        {% else %}
+        <p>Nenhum cartão ainda.</p>
+        {% endif %}
+        <br>
+        <a href="{% url 'cartao'%}">
+            <button type="button" class="btn btn-primary">Adicionar cartão</button>
+        </a>
+    </div>
+</div>
 {% endblock %}

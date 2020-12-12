@@ -2,20 +2,22 @@
 
 
 {% block body %}
-<h4>Meus endereços:</h4>
-<br>
+<div class='center_box'>
+    <div class="box_padrao">
+        <h4>Meus endereços:</h4>
+        <br>
 
-{% if enderecos %}
-    <table class="table">
-        <thead class="thead-light">
-            <tr>
-                <th scope="col">Rua/Avenida</th>
-                <th scope="col">Número</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for endereco in enderecos %}
+        {% if enderecos %}
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Rua/Avenida</th>
+                    <th scope="col">Número</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for endereco in enderecos %}
                 <tr>
                     <td>{{ endereco.rua }}</td>
                     <td>{{ endereco.numero }}</td>
@@ -29,17 +31,19 @@
                         </form>
                     </td>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <br>
-{% else %}
-<p>Nenhum endereço ainda.</p>
-{% endif %}
-<br>
+                {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        {% else %}
+        <p>Nenhum endereço ainda.</p>
+        {% endif %}
+        <br>
 
-<a href="{% url 'endereco' %}">
-<button type="button" class="btn btn-primary">Adicionar endereço</button>
-</a>
+        <a href="{% url 'endereco' %}">
+            <button type="button" class="btn btn-primary">Adicionar endereço</button>
+        </a>
+    </div>
+</div>
 
 {% endblock %}

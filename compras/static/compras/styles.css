@@ -34,7 +34,7 @@ main {
   max-width: 400px;
 }
 
-.box_conta{
+.box_padrao{
   box-shadow: 3px 3px 5px 6px #ccc;
   padding: 15px;
   border-radius: 5%;
