@@ -293,6 +293,14 @@ function mostrar(id) {
         const table = document.querySelector(`#t${id_lista}`)
         let ja_tem = false;
 
+        if (produto.value === ""){
+            alert("Selecione um produto.")
+        }
+        else if (quantidade.value === "") {
+            alert("Insira uma quantidade.")
+        }
+        else {
+
         $.get(`/add?p=${produto.value}&l=${id_lista}&q=${quantidade.value}`, (resposta) => {
 
             if (document.querySelector(`.v${id_lista}`)) {
@@ -374,12 +382,25 @@ function mostrar(id) {
                 quantidade.value = ""
             }
         })
+        }
     }
 
     function foto (id_lista) {
         const produto = document.querySelector(`#p${id_lista}`)
         const nome_foto = document.querySelector(`#nf${id_lista}`)
         const img = document.querySelector(`#im${id_lista}`)
+
+        if (produto.value === "") {
+            if (img.parentElement.children.length > 1) {
+                img.parentElement.children[1].remove()
+            }
+            img.style.display = "none";
+            vazio = document.createElement("P")
+            vazio.innerHTML = "Selecione um produto."
+            vazio.setAttribute("style","padding-top: 15px;")
+            img.parentElement.appendChild(vazio)
+
+        } else {
 
         nome_foto.innerHTML = produto.options[produto.selectedIndex].text
 
@@ -388,6 +409,8 @@ function mostrar(id) {
                 img.setAttribute("src", resposta)
             }
         })
+
+        }
     }
 
 </script>
