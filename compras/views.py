@@ -418,8 +418,6 @@ def pedido(request):
             ).order_by("nome"),
             'enderecos': Endereco.objects.filter(usuario=request.user
             ).order_by("rua"),
-            'total': request.session['pedido_total'],
-            'itens': request.session['pedido_itens'],
         })
     else:
         form = FazerPedido(request.POST)
