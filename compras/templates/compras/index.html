@@ -104,10 +104,10 @@
                             <button type="button" class="btn btn-primary" id="add{{ lista.id }}"
                                 onclick="adicionar('{{ lista.id }}')">Adicionar</button>
                             <!-- Trigger the modal with a button -->
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" onclick="foto('{{ lista.id }}')">Ver foto</button>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal{{ lista.id }}" onclick="foto('{{ lista.id }}')">Ver foto</button>
 
                             <!-- Modal -->
-                            <div id="myModal" class="modal fade" role="dialog">
+                            <div id="myModal{{ lista.id }}" class="modal fade" role="dialog">
                             <div class="modal-dialog">
 
                                 <!-- Modal content-->
