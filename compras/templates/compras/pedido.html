@@ -44,23 +44,30 @@
                             <br>
                             <a href="{% url 'criar_acompanhamento' %}">Criar nova despensa</a>
                         </div>
-                        <!--
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="envio" id="retirada" value="retirada">
+                            <input class="form-check-input" type="radio" name="entrega" id="retirada" value="R" 
+                                onclick="document.querySelector('#endereco').style.display = 'none';
+                                         document.querySelector('#endereco').children[0].required = false;
+                                         alert(document.querySelector('#endereco-select').value);
+                                         $('#endereco-select').val('default');
+                                         $('#endereco-select').selectpicker('refresh');
+                                        ">
                             <label class="form-check-label" for="retirada">
                             Retirada
                             </label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="envio" id="entrega" value="entrega">
+                            <input class="form-check-input" type="radio" name="entrega" id="entrega" value="E" 
+                                onclick="document.querySelector('#endereco').style.display = 'inline-block';
+                                         document.querySelector('#endereco').children[0].required = true;
+                                        ">
                             <label class="form-check-label" for="entrega">
                             Entrega
                             </label>
                         </div>
-                        -->
-
-                        <div class="form-group">
-                            <select name="endereco" class="selectpicker" data-live-search="true"
+                        <br>
+                        <div id='endereco' class="form-group" style="display: none;">
+                            <select id='endereco-select' name="endereco" class="selectpicker" data-live-search="true"
                                 title="Escolha o endereço de entrega" required>
                                 {% for endereco in enderecos %}
                                 <option value="{{ endereco.id }}">{{ endereco }}</option>
@@ -92,7 +99,7 @@
                 {% endfor %}
             </ul>
             <br>
-            <input class="btn btn-primary" type="submit" value="Prosseguir" form="myform" />
+            <button class="btn btn-primary" type="button" onclick="prosseguir()">Prosseguir</button>
             </div>
             </div>
         </div>
@@ -129,20 +136,24 @@
                 } 
         })
 
-        /*
-
-        <h4>Total: R$ {{ total|floatformat:2 }}</h4>
-        <br>
-        <ul>
-            {% for item in itens %}
-            <li>{{ item.quantidade }} {{ item.produto }}(s) por R$ {{ item.preco }} cada.</li>
-            {% endfor %}
-        </ul>
-        <br>
-
-        */
-
     }
+    }
+
+    function prosseguir(){
+        const retirada = document.querySelector("#retirada")
+        const entrega = document.querySelector("#entrega")
+        const endereco = document.querySelector("[name='endereco']")
+        const form = document.querySelector("#myform")
+
+        if (!retirada.checked && !entrega.checked){
+            alert("Selecione a forma de entrega.")
+        }
+        else if (entrega.checked && endereco.value === "" ) {
+            alert("Selecione o endereço.")
+        }
+        else {
+            form.submit()
+        }
     }
 
 </script>

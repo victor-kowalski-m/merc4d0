@@ -18,7 +18,7 @@ from django.core.mail import send_mail
 class FazerPedido(ModelForm):
     class Meta:
         model = Pedido
-        fields = ['lista', 'acompanhamento','supermercado', 'endereco']
+        fields = ['lista', 'acompanhamento','supermercado', 'endereco', 'entrega']
 
 class ConcluirPedido(ModelForm):
     class Meta:
@@ -465,6 +465,7 @@ def pedido(request):
             request.session['pedido_acompanhamento'] = data['acompanhamento'].__str__()
             request.session['pedido_supermercado'] = data['supermercado'].__str__()
             request.session['pedido_endereco'] = data['endereco'].__str__()
+            request.session['pedido_entrega'] = data['entrega'].__str__()
             request.session['pedido_total'] = total
             request.session['pedido_itens'] = itens
 
@@ -476,6 +477,7 @@ def pedido(request):
                 'lista': data['lista'],
                 'acompanhamento': data['acompanhamento'],
                 'endereco': data['endereco'],
+                'entrega': data['entrega'],
             })
 
         else:
