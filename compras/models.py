@@ -123,10 +123,15 @@ class Pedido(models.Model):
                                 related_name="pedidos")
     endereco = models.ForeignKey(Endereco,
                                 on_delete=models.CASCADE,
-                                related_name="pedidos")
+                                related_name="pedidos", blank=True)
     supermercado = models.ForeignKey(Supermercado,
                                 on_delete=models.CASCADE,
                                 related_name="pedidos")
+    ENTREGA_CHOICES = (
+        ('R', 'Retirada'),
+        ('E', 'Entrega'),
+    )
+    entrega = models.CharField(max_length=1, choices=ENTREGA_CHOICES)
 
 class Historico(models.Model):
     lista =  models.CharField(max_length=50)

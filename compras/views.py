@@ -321,7 +321,7 @@ def criar(request):
 
             if data['nome'] in Lista.objects.values_list('nome', flat=True).filter(usuario=request.user):
                 messages.error(request, 'Lista já existe!')
-                return render(request, "compras/criar.html")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
             instance = form.save(commit=False)
             instance.usuario = request.user
@@ -347,7 +347,7 @@ def criar_acompanhamento(request):
 
             if data['nome'] in Acompanhamento.objects.values_list('nome', flat=True).filter(usuario=request.user):
                 messages.error(request, 'Acompanhamento já existe!')
-                return render(request, "compras/criar_acompanhamento.html")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
             instance = form.save(commit=False)
             instance.usuario = request.user

@@ -223,7 +223,7 @@ function mostrar(id) {
 
                     document.querySelector(`.br${id_lista}`).style.display = "none"
 
-                    body.parentElement.parentElement.prepend(vazia)
+                    body.parentElement.parentElement.children[0].after(vazia)
                 }
 
             } else {
@@ -264,7 +264,7 @@ function mostrar(id) {
 
                         document.querySelector(`.br${id_lista}`).style.display = "none"
 
-                        body.parentElement.parentElement.prepend(vazia)
+                        body.parentElement.parentElement.children[0].after(vazia)
                     }
                 }
             } else {
@@ -308,7 +308,7 @@ function mostrar(id) {
             }
 
             if (table.style.display === "none") {
-                table.style.display = "block"
+                table.style.display = "inline-block"
             }
 
             Array.from(document.querySelector(`#t${id_lista}`).children[1].children).forEach((tr) => {
