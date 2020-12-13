@@ -171,7 +171,7 @@ def produtos(request):
 
             if ProdutoLista.objects.filter(lista=data['lista'], produto=data['produto']).exists():
                 p = ProdutoLista.objects.get(
-                    produto=Produto.objects.get(pk=data['produto'].id),
+                    produto=Produto.objects.get(pk=data['produto'][0].id),
                     lista=Lista.objects.get(pk=data['lista'].id))
                 p.quantidade += int(data['quantidade'])
                 p.save() 
@@ -767,3 +767,13 @@ def add(request):
                 quantidade=quantidade)
             p.save()
             return JsonResponse([p.id, p.produto.nome], safe=False)
+
+def get_img(request):
+    id_prod = request.GET.get('id', '')
+
+    try:
+        p = Produto.objects.get(pk=id_prod)
+    except Produto.DoesNotExist:
+        return JsonResponse("Produto não existe.", safe=False)
+
+    return JsonResponse(f"{p.img_url}", safe=False)

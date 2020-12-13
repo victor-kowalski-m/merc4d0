@@ -112,12 +112,12 @@
                                 <!-- Modal content-->
                                 <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 id="nf{{ lista.id }}" class="modal-title">Nome do Produto</h4>
+                                    <h4 id="nf{{ lista.id }}" class="modal-title"></h4>
                                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     
                                 </div>
                                 <div class="modal-body">
-                                    <p>Foto (url da imagem)</p>
+                                    <img src="" alt="Foto do produto" id="im{{ lista.id }}">
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
@@ -181,7 +181,9 @@
         if (row.children.length === 2) {
             row.children[1].style.display = 'none';
             origem_l.appendChild(row.children[1])
-        }
+        } 
+
+        //alert(`${origem_l.children[0].id} e #l${id}`)
 
         l.style.display = 'block';
 
@@ -190,7 +192,6 @@
 
         col.appendChild(l)
         row.appendChild(col)
-
     }
 
     function excluir(produto, id_lista) {
@@ -365,8 +366,15 @@
     function foto (id_lista) {
         const produto = document.querySelector(`#p${id_lista}`)
         const nome_foto = document.querySelector(`#nf${id_lista}`)
+        const img = document.querySelector(`#im${id_lista}`)
 
         nome_foto.innerHTML = produto.options[produto.selectedIndex].text
+
+        $.get(`/get_img?id=${produto.value}`, (resposta) => {
+            if (resposta !== "Produto não existe."){
+                img.setAttribute("src", resposta)
+            }
+        })
     }
 
 </script>

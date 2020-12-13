@@ -30,4 +30,5 @@ urlpatterns = [
     path("add", views.add, name="add"),
     path("aumentar", views.aumentar, name="aumentar"),
     path("diminuir", views.diminuir, name="diminuir"),
+    path("get_img", views.get_img, name="get_img"),
 ]
