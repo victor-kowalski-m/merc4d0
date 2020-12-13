@@ -542,10 +542,6 @@ def concluir(request):
 
                 # Email
                 subject = 'Pedido feito!'
-<<<<<<< HEAD
-                
-=======
->>>>>>> c9238511539e3ce53bee4f1a647e1985e43cf7e9
                 message = f'Olá {request.user.username}, recebemos seu pedido de id {h.id}. Acesse http://127.0.0.1:8000/historico para ver mais.'
                 html_message = f'<p>Olá {request.user.username}, recebemos seu pedido de id {h.id}. Acesse http://127.0.0.1:8000/historico para ver mais.</p>'
                 html_message += f'''<b><p>Pedido { h.id } em { h.data } por { h.usuario.username }</p></b>
