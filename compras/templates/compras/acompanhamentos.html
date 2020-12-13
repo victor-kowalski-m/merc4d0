@@ -132,7 +132,7 @@
             <form style="padding-top: 5px;" action="{% url 'acompanhamento' acompanhamento.id %}" method="post">
                 {% csrf_token %}
                 <a href="{% url 'pedido' %}?acompanhamento={{acompanhamento.id}}">
-                    <button type="button" class="btn btn-primary">Pedir lista</button>
+                    <button type="button" class="btn btn-primary">Pedir despensa</button>
                 </a>
                 <input type="hidden" name="acompanhamento" value="excluir">
                 <input type="submit" class="btn btn-danger" value="Excluir despensa">

@@ -11,6 +11,8 @@ from django.contrib.messages import get_messages
 from django.forms import ModelForm
 from django.http import JsonResponse
 from .models import *
+from django.conf import settings 
+from django.core.mail import send_mail 
 
 
 class FazerPedido(ModelForm):
@@ -141,6 +143,15 @@ def registrar(request):
             messages.error(request, 'Usuário já existe.')
             return render(request, "compras/registrar.html")
         login(request, user)
+
+        # Email
+        subject = 'Bem-vindo ao Merc4d0!'
+        message = f'Olá {user.username}, obrigado por registrar-se no Merc4d0.'
+        email_from = settings.EMAIL_HOST_USER 
+        recipient_list = [user.email, ] 
+        send_mail( subject, message, email_from, recipient_list ) 
+
+
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "compras/registrar.html")
