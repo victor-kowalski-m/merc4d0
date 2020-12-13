@@ -733,6 +733,7 @@ def acompanhamento(request, id):
             messages.success(request, "Produto excluído.")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+@login_required(login_url='login')
 def excluir(request):
     prod_lista = request.GET.get('p', '')
 
@@ -752,6 +753,7 @@ def excluir(request):
     p.delete()
     return JsonResponse("Produto excluído!", safe=False)
 
+@login_required(login_url='login')
 def aumentar(request):
     prod_lista = request.GET.get('p', '')
 
@@ -771,6 +773,7 @@ def aumentar(request):
     p.save()
     return JsonResponse("Aumentado", safe=False)
 
+@login_required(login_url='login')
 def diminuir(request):
     prod_lista = request.GET.get('p', '')
 
@@ -793,7 +796,7 @@ def diminuir(request):
         p.save()
     return JsonResponse("Diminuido", safe=False)
 
-
+@login_required(login_url='login')
 def add(request):
     id_produto = request.GET.get('p', '')
     id_lista = request.GET.get('l', '')
@@ -833,6 +836,7 @@ def add(request):
             p.save()
             return JsonResponse([p.id, p.produto.nome], safe=False)
 
+@login_required(login_url='login')
 def get_img(request):
     id_prod = request.GET.get('id', '')
 
@@ -843,6 +847,7 @@ def get_img(request):
 
     return JsonResponse(f"{p.img_url}", safe=False)
 
+@login_required(login_url='login')
 def preco(request):
     id_lista = request.GET.get('l', '')
     id_acompanhamento = request.GET.get('a', '')
