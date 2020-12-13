@@ -505,12 +505,18 @@ def concluir(request):
                 'pedido_itens',
                 'pedido_total'
             }:
+
+                if request.session['pedido_entrega'] == "Retirada":
+                    endereco = 'Retirada'
+                elif request.session['pedido_entrega'] == "Entrega":
+                    endereco = request.session['pedido_endereco']
+                    
                 h = Historico(
                     lista=request.session['pedido_lista'],
                     acompanhamento=request.session['pedido_acompanhamento'],
                     supermercado=request.session['pedido_supermercado'], 
                     cartao=data['cartao'],
-                    endereco=request.session['pedido_endereco'],
+                    endereco=endereco,
                     total=request.session['pedido_total'],
                     usuario=request.user
                     )
@@ -550,6 +556,7 @@ def concluir(request):
                 <p><b>Lista:</b> { h.lista }</p>
                 <p><b>Despensa:</b> { h.acompanhamento }</p>
                 <p><b>Supermercado:</b> { h.supermercado }</p>
+                <p><b>Entrega:</b> { h.endereco }</p>
                 <p><b>Cartão:</b> { h.cartao }</p>
                 <p><b>Total:</b> { round(h.total,2) }</p>
                 <p><b>Produtos:</b></p>
@@ -566,7 +573,10 @@ def concluir(request):
                 message = f'Um novo pedido foi realizado no seu mercado ({h.supermercado})!'
                 html_message = f'Um novo pedido foi realizado no seu mercado ({h.supermercado})!</p>'
                 html_message += f'''<b><p>Pedido { h.id } em { h.data } por { h.usuario.username }</p></b>
+                <p><b>Nome do cliente:</b> {h.usuario.first_name} {h.usuario.last_name}</p>
+                <p><b>CPF:</b> { h.usuario.cpf }</p>
                 <p><b>Supermercado:</b> { h.supermercado }</p>
+                <p><b>Entrega:</b> { h.endereco }</p>
                 <p><b>Total:</b> { round(h.total,2) }</p>
                 <p><b>Produtos:</b></p>
                 <ul>

@@ -112,8 +112,8 @@ class SupermercadoProduto(models.Model):
         return f"{self.produto} em {self.supermercado} por {self.preco}"
 
 ENTREGA_CHOICES = (
-        ('R', 'Retirada'),
-        ('E', 'Entrega'),
+        ('Retirada', 'Retirada'),
+        ('Entrega', 'Entrega'),
     )
 
 class Pedido(models.Model):
@@ -132,7 +132,7 @@ class Pedido(models.Model):
     supermercado = models.ForeignKey(Supermercado,
                                 on_delete=models.CASCADE,
                                 related_name="pedidos")
-    entrega = models.CharField(max_length=1, choices=ENTREGA_CHOICES)
+    entrega = models.CharField(max_length=8, choices=ENTREGA_CHOICES)
 
 class Historico(models.Model):
     lista =  models.CharField(max_length=50)
