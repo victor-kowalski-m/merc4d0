@@ -542,33 +542,50 @@ def concluir(request):
 
                 # Email
                 subject = 'Pedido feito!'
-
                 message = f'Olá {request.user.username}, recebemos seu pedido de id {h.id}. Acesse http://127.0.0.1:8000/historico para ver mais.'
-
                 html_message = f'<p>Olá {request.user.username}, recebemos seu pedido de id {h.id}. Acesse http://127.0.0.1:8000/historico para ver mais.</p>'
-                
                 html_message += f'''<b><p>Pedido { h.id } em { h.data } por { h.usuario.username }</p></b>
                 <p><b>Lista:</b> { h.lista }</p>
                 <p><b>Despensa:</b> { h.acompanhamento }</p>
                 <p><b>Supermercado:</b> { h.supermercado }</p>
                 <p><b>Cartão:</b> { h.cartao }</p>
-                <p><b>Total:</b> { h.total }</p>
+                <p><b>Total:</b> { round(h.total,2) }</p>
                 <p><b>Produtos:</b></p>
                 <ul>
                 '''
                 for item in h.produtos.all():
                     html_message += f"<li>{ item.quantidade } { item.produto }(s) por { item.preco } cada.</li>"
-                
                 html_message += "</ul>"
-
-
                 email_from = settings.EMAIL_HOST_USER 
                 recipient_list = [request.user.email, ] 
                 send_mail( subject, message, email_from, recipient_list, html_message=html_message )
 
+                subject = 'Novo pedido!'
+                message = f'Um novo pedido foi realizado no seu mercado ({h.supermercado})!'
+                html_message = f'Um novo pedido foi realizado no seu mercado ({h.supermercado})!</p>'
+                html_message += f'''<b><p>Pedido { h.id } em { h.data } por { h.usuario.username }</p></b>
+                <p><b>Supermercado:</b> { h.supermercado }</p>
+                <p><b>Total:</b> { round(h.total,2) }</p>
+                <p><b>Produtos:</b></p>
+                <ul>
+                '''
+                nome_mercado = h.supermercado.split("-")[0][:-1]
+                unidade_mercado = h.supermercado.split("-")[1][1:]
+                try:
+                    email_supermercado = Supermercado.objects.get(nome=nome_mercado,unidade=unidade_mercado).email
+                except:
+                    messages.error(request, "Email do supermercado não encontrado")
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                
+                for item in h.produtos.all():
+                    html_message += f"<li>{ item.quantidade } { item.produto }(s) por { item.preco } cada.</li>"
+                html_message += "</ul>"
+                email_from = settings.EMAIL_HOST_USER 
+                recipient_list = [email_supermercado, ] 
+                send_mail( subject, message, email_from, recipient_list, html_message=html_message )
+
                 messages.success(request, "Pedido feito!")
                 return HttpResponseRedirect(reverse('pedidos'))
-
             else:
                 messages.error(request, "Não foi possível concluir o pedido.")
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
