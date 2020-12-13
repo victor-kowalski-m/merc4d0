@@ -6,20 +6,35 @@
 <br>
 <ul>
 {% for historico in historicos reversed %}
+    <div class='center_box' >
+    <div class="box_padrao" style="background-color: rgb(253, 253, 184); border-radius: 0%;">
     <li>
-        <b><p>Pedido {{ historico.id }} em {{ historico.data|date:"d/m/y H:i" }}</p></b>
+        <br>
+        <b><h5>Pedido {{ historico.id }} em {{ historico.data|date:"d/m/y H:i" }}</h5></b>
+        <hr>
         <p><b>Lista:</b> {{ historico.lista }}</p>
+        <hr>
         <p><b>Despensa:</b> {{ historico.acompanhamento }}</p>
+        <hr>
         <p><b>Supermercado:</b> {{ historico.supermercado }}</p>
+        <hr>
         <p><b>Cartão:</b> {{ historico.cartao }}</p>
+        <hr>
         <p><b>Total:</b> {{ historico.total }}</p>
+        <hr>
         <p><b>Produtos:</b></p>
         <ul>
             {% for item in historico.produtos.all %}
+                {% if forloop.counter0 > 0 %}
+                <hr style="width:70%">
+                {% endif %}
                 <li>{{ item.quantidade }} {{ item.produto }}(s) por {{ item.preco }} cada.</li>
             {% endfor %}
         </ul>
+        <br>
     </li>
+    </div>
+    </div>
     <br><hr><br>
 {% empty %}
     <p">Nenhum pedido ainda.</p>
