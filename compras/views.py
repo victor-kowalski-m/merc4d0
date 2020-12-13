@@ -456,7 +456,6 @@ def pedido(request):
                     itens.append(item)
 
                 total += quantidade * preco
-                total = round(total,2)
                 
             if total == 0:
                 messages.error(request, "Nada a ser comprado!")
@@ -543,11 +542,30 @@ def concluir(request):
 
                 # Email
                 subject = 'Pedido feito!'
+
                 message = f'Olá {request.user.username}, recebemos seu pedido de id {h.id}. Acesse http://127.0.0.1:8000/historico para ver mais.'
+
+                html_message = f'<p>Olá {request.user.username}, recebemos seu pedido de id {h.id}. Acesse http://127.0.0.1:8000/historico para ver mais.</p>'
+                
+                html_message += f'''<b><p>Pedido { h.id } em { h.data } por { h.usuario.username }</p></b>
+                <p><b>Lista:</b> { h.lista }</p>
+                <p><b>Despensa:</b> { h.acompanhamento }</p>
+                <p><b>Supermercado:</b> { h.supermercado }</p>
+                <p><b>Cartão:</b> { h.cartao }</p>
+                <p><b>Total:</b> { h.total }</p>
+                <p><b>Produtos:</b></p>
+                <ul>
+                '''
+                for item in h.produtos.all():
+                    html_message += f"<li>{ item.quantidade } { item.produto }(s) por { item.preco } cada.</li>"
+                
+                html_message += "</ul>"
+
+
                 email_from = settings.EMAIL_HOST_USER 
                 recipient_list = [request.user.email, ] 
-                send_mail( subject, message, email_from, recipient_list )
-                
+                send_mail( subject, message, email_from, recipient_list, html_message=html_message )
+
                 messages.success(request, "Pedido feito!")
                 return HttpResponseRedirect(reverse('pedidos'))
 
