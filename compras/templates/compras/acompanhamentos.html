@@ -21,10 +21,10 @@
 
     <!-- Div que mostra ou esconde o conteúdo do acompanhamento -->
     <div id="l{{ acompanhamento.id }}" style="display: none;" class="box_lista_despensa">
-        <h4><a href="" onclick="document.querySelector('#l{{ acompanhamento.id }}').style.display = 'none';
+        <h4><!--<a href="" onclick="document.querySelector('#l{{ acompanhamento.id }}').style.display = 'none';
                                 document.querySelector(`#cl{{ acompanhamento.id }}`).appendChild(document.querySelector('#l{{ acompanhamento.id }}'));
                                 document.querySelector('#row').children[1].remove()
-                                return false">{{ acompanhamento.nome }}</a></h4>
+                                return false">-->{{ acompanhamento.nome }}<!--</a>--></h4>
         <br>
         {% if acompanhamento.produtos.all %}
         <table id="t{{acompanhamento.id}}" class="table">
@@ -168,15 +168,19 @@
 {% block script %}
 <script>
 
-    function mostrar(id) {
+function mostrar(id) {
         const l = document.querySelector(`#l${id}`)
         const row = document.querySelector('#row')
         const origem_l = document.querySelector(`#cl${id}`)
+        let displayed = false;
 
-        if (row.children.length === 2){
+        if (row.children.length === 2) {
             row.children[1].style.display = 'none';
-            origem_l.appendChild(row.children[1])
-        }
+            origem_l.appendChild(row.children[1].children[1])
+            displayed = true
+        } 
+
+        if(origem_l.children[0].id !== `l${id}` || displayed === false){
 
         l.style.display = 'block';
 
@@ -186,6 +190,7 @@
         col.appendChild(l)
         row.appendChild(col)
 
+    }
     }
 
     function excluir(produto, id_lista){

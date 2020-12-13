@@ -15,6 +15,7 @@
                 {% endif %}
 
                 <li>
+                    <!-- -->
                     <h4><a href="" onclick="mostrar('{{ lista.id }}'); return false">{{ lista.nome }}</a></h4>
                 </li>
 
@@ -22,10 +23,10 @@
 
                     <!-- Div que mostra ou esconde o conteúdo da lista -->
                     <div id="l{{ lista.id }}" style="display: none;" class="box_lista_despensa">
-                        <h4><a href="" onclick="document.querySelector('#l{{ lista.id }}').style.display = 'none';
+                        <h4><!--<a href="" onclick="document.querySelector('#l{{ lista.id }}').style.display = 'none';
                                 document.querySelector(`#cl{{ lista.id }}`).appendChild(document.querySelector('#l{{ lista.id }}'));
                                 document.querySelector('#row').children[1].remove()
-                                return false">{{ lista.nome }}</a></h4>
+                                return false">-->{{ lista.nome }}<!--</a>--></h4>
                         <br>
                         {% if lista.produtos.all %}
                         <table id="t{{lista.id}}" class="table">
@@ -177,13 +178,15 @@
         const l = document.querySelector(`#l${id}`)
         const row = document.querySelector('#row')
         const origem_l = document.querySelector(`#cl${id}`)
+        let displayed = false;
 
         if (row.children.length === 2) {
             row.children[1].style.display = 'none';
-            origem_l.appendChild(row.children[1])
+            origem_l.appendChild(row.children[1].children[1])
+            displayed = true
         } 
 
-        //alert(`${origem_l.children[0].id} e #l${id}`)
+        if(origem_l.children[0].id !== `l${id}` || displayed === false){
 
         l.style.display = 'block';
 
@@ -192,6 +195,8 @@
 
         col.appendChild(l)
         row.appendChild(col)
+
+    }
     }
 
     function excluir(produto, id_lista) {
