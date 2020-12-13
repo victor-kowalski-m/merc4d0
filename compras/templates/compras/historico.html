@@ -7,7 +7,7 @@
 <ul>
 {% for historico in historicos reversed %}
     <li>
-        <b><p>{{ historico.data|date:"d/m/y H:i" }}</p></b>
+        <b><p>Pedido {{ historico.id }} em {{ historico.data|date:"d/m/y H:i" }}</p></b>
         <p><b>Lista:</b> {{ historico.lista }}</p>
         <p><b>Despensa:</b> {{ historico.acompanhamento }}</p>
         <p><b>Supermercado:</b> {{ historico.supermercado }}</p>

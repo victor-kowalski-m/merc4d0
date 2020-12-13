@@ -540,6 +540,13 @@ def concluir(request):
                             acompanhamento=Acompanhamento.objects.get(pk=Acompanhamento.objects.get(nome=request.session['pedido_acompanhamento']).id),
                             quantidade=produto['quantidade'])
                         p.save()
+
+                # Email
+                subject = 'Pedido feito!'
+                message = f'Olá {request.user.username}, recebemos seu pedido de id {h.id}. Acesse http://127.0.0.1:8000/historico para ver mais.'
+                email_from = settings.EMAIL_HOST_USER 
+                recipient_list = [request.user.email, ] 
+                send_mail( subject, message, email_from, recipient_list )
                 
                 messages.success(request, "Pedido feito!")
                 return HttpResponseRedirect(reverse('pedidos'))
