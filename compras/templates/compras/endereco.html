@@ -3,7 +3,7 @@
 {% block body %}
 <div class='center_box'>
     <div class="box_padrao">
-        <form action="{% url 'endereco' %}" method="post" autocomplete="off">
+        <form action="endereco?next={{ request.GET.next }}" method="post" autocomplete="off">
             {% csrf_token %}
             <div class="form-group">
                 <input class="form-control" type="text" required name="cep" placeholder="CEP (apenas números)">

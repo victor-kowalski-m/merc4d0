@@ -89,6 +89,8 @@ def login_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, 'Logado!')
+            if request.GET.get('next'):
+                return HttpResponseRedirect(request.GET.get('next'))
             return HttpResponseRedirect(reverse("index"))
         else:
             messages.error(request, 'Dados inválidos.')
@@ -327,6 +329,8 @@ def criar(request):
             instance.usuario = request.user
             instance.save()
             messages.success(request, 'Lista criada!')
+            if request.GET.get('next'):
+                return HttpResponseRedirect(request.GET.get('next')+f"?lista={instance.id}")
             return HttpResponseRedirect(reverse("index")) 
 
         else:
@@ -353,6 +357,8 @@ def criar_acompanhamento(request):
             instance.usuario = request.user
             instance.save()
             messages.success(request, 'Despensa criada!')
+            if request.GET.get('next'):
+                return HttpResponseRedirect(request.GET.get('next')+f"?acompanhamento={instance.id}")
             return HttpResponseRedirect(reverse("acompanhamentos")) 
 
         else:
@@ -668,6 +674,8 @@ def endereco(request):
             instance.usuario = request.user
             instance.save()
             messages.success(request, 'Endereço salvo!')
+            if request.GET.get('next'):
+                return HttpResponseRedirect(request.GET.get('next'))
             return HttpResponseRedirect(reverse("enderecos"))
 
         else:

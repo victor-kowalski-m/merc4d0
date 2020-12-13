@@ -25,7 +25,7 @@
                                 {% endfor %}
                             </select>
                             <br>
-                            <a href="{% url 'criar' %}">Criar nova lista</a>
+                            <a href="criar?next=pedido">Criar nova lista</a>
                         </div>
                         <div class="form-group">
                             <select name="acompanhamento" class="selectpicker" data-live-search="true" title="Escolha a despensa" onchange="mostrar()" required>
@@ -42,7 +42,7 @@
                                 {% endfor %}
                             </select>
                             <br>
-                            <a href="{% url 'criar_acompanhamento' %}">Criar nova despensa</a>
+                            <a href="criar_acompanhamento?next=pedido">Criar nova despensa</a>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="entrega" id="retirada" value="Retirada" 
@@ -74,7 +74,7 @@
                                 {% endfor %}
                             </select>
                             <br>
-                            <a href="{% url 'endereco' %}">Adicionar endereço</a>
+                            <a href="endereco?next=pedido">Adicionar endereço</a>
                         </div>
                         <div class="form-group">
                             <select name="supermercado" class="selectpicker" data-live-search="true" title="Escolha o supermercado" onchange="mostrar()"

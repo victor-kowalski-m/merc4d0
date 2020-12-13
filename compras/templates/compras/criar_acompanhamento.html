@@ -3,7 +3,7 @@
 {% block body %}
 <h4>Nova Despensa:</h4>
     <br>
-    <form action="{% url 'criar_acompanhamento' %}" method="post" autocomplete="off">
+    <form action="criar_acompanhamento?next={{ request.GET.next }}" method="post" autocomplete="off">
         {% csrf_token %}
         <div class="form-group">
         <input  autofocus class="form-control" type="text" required name="nome" placeholder="Nome">
