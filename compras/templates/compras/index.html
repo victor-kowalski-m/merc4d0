@@ -402,6 +402,10 @@ function mostrar(id) {
 
         } else {
 
+        if (img.parentElement.children.length > 1) {
+            img.parentElement.children[1].remove()
+        }
+        img.style.display = "inline-block";
         nome_foto.innerHTML = produto.options[produto.selectedIndex].text
 
         $.get(`/get_img?id=${produto.value}`, (resposta) => {
