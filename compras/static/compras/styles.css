@@ -176,3 +176,7 @@ body header {
 header p {
   padding: 10px;
 }
+
+.col {
+  color: #5c65cf;
+}
