@@ -417,7 +417,9 @@ def pedido(request):
             'acompanhamentos': Acompanhamento.objects.filter(usuario=request.user
             ).order_by("nome"),
             'enderecos': Endereco.objects.filter(usuario=request.user
-            ).order_by("rua")
+            ).order_by("rua"),
+            'total': request.session['pedido_total'],
+            'itens': request.session['pedido_itens'],
         })
     else:
         form = FazerPedido(request.POST)
@@ -830,3 +832,50 @@ def get_img(request):
         return JsonResponse("Produto não existe.", safe=False)
 
     return JsonResponse(f"{p.img_url}", safe=False)
+
+def preco(request):
+    id_lista = request.GET.get('l', '')
+    id_acompanhamento = request.GET.get('a', '')
+    id_supermercado = request.GET.get('s', '')
+
+    total = 0
+    itens = []
+    
+    itens_despensa = ProdutoAcompanhamento.objects.filter(acompanhamento=id_acompanhamento) 
+    produto_despensa = ProdutoAcompanhamento.objects.values_list('produto', flat=True).filter(acompanhamento=id_acompanhamento) 
+
+    for produto in ProdutoLista.objects.filter(lista=id_lista):
+        quantidade = produto.quantidade
+        if produto.produto.id in produto_despensa:
+            quant_despensa = itens_despensa.get(produto=produto.produto).quantidade
+            if quantidade > quant_despensa:
+                quantidade = quantidade - quant_despensa
+            else:
+                quantidade = 0
+
+        preco = float(SupermercadoProduto.objects.get(
+            produto=produto.produto, 
+            supermercado=id_supermercado,
+            ).preco)
+
+        if quantidade != 0:
+            item = {
+                'quantidade': quantidade, 
+                'produto': produto.produto.nome,
+                'preco': round(preco,2),
+                'id': produto.produto.id
+                }
+
+            itens.append(item)
+
+        total += quantidade * preco
+        
+    if total == 0:
+        return JsonResponse("Nada a comprar", safe=False)
+
+    #request.session['pedido_total'] = total
+    #request.session['pedido_itens'] = itens
+
+    return JsonResponse([total, itens], safe=False)
+
+    pass
