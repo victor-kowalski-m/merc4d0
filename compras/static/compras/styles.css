@@ -177,9 +177,15 @@ header p {
   padding: 10px;
 }
 
+<<<<<<< HEAD
 /* .form_add {
   border: solid var(--nav-background) 2px;
   padding: 10px;
   border-radius: 5px;
 } */
 
+=======
+.col {
+  color: #5c65cf;
+}
+>>>>>>> 937303d68416ada27fd82a80a4f6dd8f2068ec33
