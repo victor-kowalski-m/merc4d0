@@ -32,4 +32,6 @@ urlpatterns = [
     path("diminuir", views.diminuir, name="diminuir"),
     path("get_img", views.get_img, name="get_img"),
     path("preco", views.preco, name="preco"),
+    path("lixeira_decrementa/<int:acompanhamentoId>/<str:codBar>", views.lixeira_decrementa, name="lixeira_decrementa"),
+    path("atualiza_quantidade", views.atualiza_quantidade, name="atualiza_quantidade")
 ]

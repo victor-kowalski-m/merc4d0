@@ -38,7 +38,7 @@
             </thead>
             <tbody>
                 {% for produto in acompanhamento.produtos.all %}
-                <tr id="r{{ produto.id }}">
+                <tr id="r{{ produto.id }}" data-prod="{{ produto.id }}" data-acomp="{{ acompanhamento.id }}">
                     <td>{{ produto.produto.nome }}</td>
                     <td>{{ produto.quantidade }}</td>
                     <td>
@@ -168,6 +168,120 @@
 {% block script %}
 <script>
 
+$(document).ready(function() {sessionStorage.removeItem("despensaAtiva");});
+
+function refresh_quantidade(){
+    let acompanhamento_id = sessionStorage.getItem("despensaAtiva");
+    if (acompanhamento_id){
+        acompanhamento_id = parseInt(acompanhamento_id);
+        $.ajax({
+            url: `/atualiza_quantidade?acomp=${acompanhamento_id}`,
+            success: function(resposta) {
+                let prods = $(`[data-acomp="${acompanhamento_id}"]`).toArray()
+                $.each(resposta, function(i, produto) {
+                    debugger;
+                    console.log(produto);
+                    let row = $(`[data-acomp="${acompanhamento_id}"][data-prod="${produto.id}"]`)[0];
+                    if (row) {
+                        row.children[1].innerHTML = `${produto.quantidade}`;
+                    } else {
+                        let table = document.querySelector(`#t${acompanhamento_id}`)
+                        if (document.querySelector(`.v${acompanhamento_id}`)){
+                            document.querySelector(`.v${acompanhamento_id}`).remove()
+                        }
+
+                        if (table.style.display === "none"){
+                            table.style.display = "inline-block"
+                        }
+                        let tr = document.createElement("TR");
+                        tr.setAttribute("id", `r${produto.id}`)
+                        tr.setAttribute("data-acomp", `${acompanhamento_id}`)
+                        tr.setAttribute("data-prod", `${produto.id}`)
+
+                        let tdp = document.createElement("TD");
+                        tdp.innerHTML = produto.produto__nome
+
+                        let tdq = document.createElement("TD");
+                        tdq.innerHTML = produto.quantidade
+
+                        let tdmudar = document.createElement("TD");
+
+                        let aumbutton = document.createElement("BUTTON");
+                        aumbutton.setAttribute("class", "close")
+                        aumbutton.setAttribute("aria-label", "Close")
+                        aumbutton.setAttribute("onclick", `aumentar(this.parentElement.parentElement,'${acompanhamento_id}')`)
+
+                        let aumbutspan = document.createElement("SPAN");
+                        aumbutspan.setAttribute("aria-hidden", "true")
+                        aumbutspan.innerHTML = "&plus;"
+
+                        aumbutton.appendChild(aumbutspan)
+
+                        tdmudar.appendChild(aumbutton)
+
+                        let dimbutton = document.createElement("BUTTON");
+                        dimbutton.setAttribute("class", "close")
+                        dimbutton.setAttribute("aria-label", "Close")
+                        dimbutton.setAttribute("onclick", `diminuir(this.parentElement.parentElement,'${acompanhamento_id}')`)
+
+                        let dimbutspan = document.createElement("SPAN");
+                        dimbutspan.setAttribute("aria-hidden", "true")
+                        dimbutspan.innerHTML = "&minus;"
+
+                        dimbutton.appendChild(dimbutspan)
+
+                        tdmudar.appendChild(dimbutton)
+
+                        let tdex = document.createElement("TD");
+
+                        let exbutton = document.createElement("BUTTON");
+                        exbutton.setAttribute("class", "close")
+                        exbutton.setAttribute("aria-label", "Close")
+                        exbutton.setAttribute("onclick", `excluir(this.parentElement.parentElement,'${acompanhamento_id}')`)
+
+                        let exbutspan = document.createElement("SPAN");
+                        exbutspan.setAttribute("aria-hidden", "true")
+                        exbutspan.innerHTML = "&times;"
+
+                        exbutton.appendChild(exbutspan)
+
+                        tdex.appendChild(exbutton)
+
+                        tr.appendChild(tdp)
+                        tr.appendChild(tdq)
+                        tr.appendChild(tdmudar)
+                        tr.appendChild(tdex)
+
+                        table.children[1].appendChild(tr);
+
+
+                    }
+                    prods = prods.filter(item => item !== row)
+                });
+                prods.forEach(elem => {
+                    let body = row.parentElement;
+                    elem.remove();
+                    if (body.children.length === 0) {
+                        body.parentElement.style.display = "none"
+
+                        let vazia = document.createElement("P")
+                        vazia.setAttribute("class", `v${id_lista}`)
+                        vazia.innerHTML = "<br>Despensa Vazia."
+
+                        document.querySelector(`.br${id_lista}`).style.display = "none"
+
+                        body.parentElement.parentElement.children[0].after(vazia)
+                    }
+                })
+            },
+            complete: function() {
+              // schedule the next request *only* when the current one is complete:
+              setTimeout(refresh_quantidade, 2000);
+            }
+        });
+    }
+}
+
 function mostrar(id) {
         const l = document.querySelector(`#l${id}`)
         const row = document.querySelector('#row')
@@ -199,6 +313,13 @@ function mostrar(id) {
         col.appendChild(l)
         row.appendChild(col)
         }
+
+        if (sessionStorage.getItem("despensaAtiva") === id.toString()){
+            sessionStorage.removeItem("despensaAtiva");
+        } else {
+            sessionStorage.setItem("despensaAtiva", id.toString());
+        }
+        refresh_quantidade();
     }
 
     function excluir(produto, id_lista){
@@ -316,6 +437,8 @@ function mostrar(id) {
             if (!ja_tem) {
                 let tr = document.createElement("TR");
                 tr.setAttribute("id", `r${resposta[0]}`)
+                tr.setAttribute("data-acomp", `${id_lista}`)
+                tr.setAttribute("data-prod", `${resposta[0]}`)
 
                 let tdp = document.createElement("TD");
                 tdp.innerHTML = resposta[1]

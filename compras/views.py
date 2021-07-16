@@ -13,7 +13,8 @@ from django.http import JsonResponse
 from .models import *
 from django.conf import settings 
 from django.core.mail import send_mail 
-
+from django.http import Http404
+from django.core import serializers
 
 class FazerPedido(ModelForm):
     class Meta:
@@ -902,3 +903,39 @@ def preco(request):
     return JsonResponse([total, itens], safe=False)
 
     pass
+
+
+def lixeira_decrementa(request, acompanhamentoId, codBar):
+
+    try:
+        acomp = Acompanhamento.objects.get(pk=acompanhamentoId)
+    except Acompanhamento.DoesNotExist:
+        return HttpResponse("Resposta: Despensa não cadastrada no site.##")
+
+    try:
+        prod = Produto.objects.get(codigo_de_barras=codBar)
+    except Produto.DoesNotExist:
+        return HttpResponse("Resposta: Produto não cadastrado no site.##")
+
+    try:
+        prodAcomp = ProdutoAcompanhamento.objects.get(
+            acompanhamento_id=acomp.id,
+            produto_id=prod.id
+        )
+    except ProdutoAcompanhamento.DoesNotExist:
+        return HttpResponse("Resposta: Nenhum produto deste na despensa.##")
+
+    if prodAcomp.quantidade == 1:
+        prodAcomp.delete()
+    else:
+        prodAcomp.quantidade -= 1
+        prodAcomp.save()
+    return HttpResponse("Resposta: Produto decrementado!##")
+
+
+@login_required(login_url='login')
+def atualiza_quantidade(request):
+    acomp_id = request.GET.get('acomp', '')
+    quants = ProdutoAcompanhamento.objects.filter(acompanhamento_id=acomp_id).values('id', 'quantidade', 'produto__nome')
+    return JsonResponse(list(quants), safe=False)
+
