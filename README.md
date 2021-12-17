@@ -9,4 +9,4 @@ Code structure:
 
 Additionaly, an embedded device was developed to keep track of product quantities, detecting when a package is thrown away. The code for it can be checked here: [Smart thrash bin](https://github.com/victor-kowalski-m/embarcados)
 
-![Webpage](https://user-images.githubusercontent.com/70666266/146569158-dc5767c0-6ec3-4e90-9263-71a6de91a04e.png)
+<img src="https://user-images.githubusercontent.com/70666266/146569158-dc5767c0-6ec3-4e90-9263-71a6de91a04e.png" alt="web page" width="600"/>
