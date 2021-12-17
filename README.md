@@ -1,6 +1,6 @@
 ## Merc4d0 - Smart groceries
 
-Code for the final project for the undergraduate course "Information Systems" (PMR3304) from the sixth semester of Mechatronics Engineering at Universidade de São Paulo.
+Code for the final project for the undergraduate course "Information Systems" (PMR3304) from the Mechatronics Engineering degree course at Universidade de São Paulo.
 
 Consists in a web app that makes it easier to manage grocery lists in a household.
 
